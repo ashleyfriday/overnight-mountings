@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ring Builder · Overnight Mountings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="app">
+    <!-- Background: warm studio wall with light shafts -->
+    <div class="backdrop" aria-hidden="true">
+      <span class="beam b1"></span>
+      <span class="beam b2"></span>
+      <span class="beam b3"></span>
+      <span class="glow"></span>
+    </div>
+
+    <!-- 3D stage: pillar + floating ring -->
+    <section class="stage" aria-label="3D ring preview. Drag to rotate, scroll to zoom.">
+      <canvas id="scene"></canvas>
+      <div class="stage-fade" aria-hidden="true"></div>
+      <div class="loading" id="loading">Polishing your ring…</div>
+
+      <div class="caption">
+        <div class="shown">
+          <p class="eyebrow">Shown</p>
+          <p class="shown-title" id="shownTitle">Solitaire · four prong, thin band</p>
+          <p class="shown-meta">14K white gold · 1.00 ct round lab grown</p>
+        </div>
+        <div class="view-controls">
+          <button class="pill" id="spinBtn" aria-pressed="false">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 8a6 6 0 1 1-2-4.47"/><path d="M14 2.67V6h-3.33"/></svg>
+            <span>360° view</span>
+          </button>
+          <button class="pill round" id="splitBtn" aria-pressed="false" aria-label="Separate the diamond from the ring" title="Separate diamond">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <g class="split-gem"><path d="M5.6 2.6h4.8L12 4.3 8 8 4 4.3z" stroke-width=".9"/><path d="M4 4.3h8M6.6 4.3L8 8l1.4-3.7" stroke-width=".6"/></g>
+              <ellipse cx="8" cy="12.2" rx="4.6" ry="2.3" stroke-width=".95"/>
+            </svg>
+          </button>
+          <button class="pill round" id="zoomBtn" aria-pressed="false" aria-label="Zoom">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="7.33" cy="7.33" r="4.67"/><path d="M13.33 13.33l-2.66-2.66M7.33 5.33v4M5.33 7.33h4" class="zoom-plus"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Header -->
+    <header class="header">
+      <a class="logo" href="#" aria-label="Overnight home">
+        <svg viewBox="0 0 490 117" width="176" height="42" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="moon" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#9aa3ad" />
+              <stop offset="1" stop-color="#5b6f8c" />
+            </linearGradient>
+          </defs>
+          <text x="2" y="86" textLength="236" lengthAdjust="spacingAndGlyphs" font-family="Jost" font-weight="800" font-size="74" fill="#3f5e88">OVER</text>
+          <text x="240" y="86" textLength="50" lengthAdjust="spacingAndGlyphs" font-family="Jost" font-weight="300" font-size="74" fill="#7f8792">N</text>
+          <path d="M281 3 C 336 22, 338 96, 281 114 C 322 90, 322 28, 281 3 Z" fill="url(#moon)" />
+          <text x="326" y="86" textLength="160" lengthAdjust="spacingAndGlyphs" font-family="Jost" font-weight="300" font-size="74" fill="#8a9099">GHT</text>
+        </svg>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#">Collections</a>
+        <a href="#">Engagement Rings</a>
+        <a href="#">Wedding Bands</a>
+        <a href="#">Jewelry</a>
+        <a href="#">Diamonds</a>
+        <a href="#">Services</a>
+      </nav>
+      <div class="actions">
+        <button class="icon-btn" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.17" stroke-linecap="round"><circle cx="9.17" cy="9.17" r="5.42"/><path d="M13.33 13.33l3.75 3.75"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Account">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.17" stroke-linecap="round"><circle cx="10" cy="7.08" r="3.33"/><path d="M3.75 17.08c1-3 3.33-4.58 6.25-4.58s5.25 1.58 6.25 4.58"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Bag">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.17" stroke-linejoin="round"><path d="M4.17 6.67h11.66L15 16.67H5z"/><path d="M7.5 6.67V5a2.5 2.5 0 0 1 5 0v1.67"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Builder panel -->
+    <aside class="panel" aria-label="Ring builder">
+      <ol class="stepper">
+        <li class="step active" aria-current="step">
+          <span class="bubble">
+            <svg width="40" height="40" viewBox="0 0 32 32" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="16" cy="21" rx="9" ry="6.5"/><ellipse cx="16" cy="21" rx="7.4" ry="5" stroke-width=".6"/>
+              <path d="M13 15.4l3-4.2 3 4.2" stroke-width=".8"/><path d="M12.4 11h7.2l-1.7-2.5h-3.8z"/><path d="M12.4 11l3.6 3 3.6-3M14.1 8.5l1.9 2.5 1.9-2.5" stroke-width=".6"/>
+            </svg>
+          </span>
+          <span class="step-label">Ring</span>
+        </li>
+        <li class="step">
+          <span class="bubble">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6.25 31.25h12.5L16.88 25H8.13zM21.25 31.25h12.5L31.88 25h-8.75zM13.75 24.5h12.5l-1.88-6.25h-8.75z"/>
+              <path d="M10 28.13h3.75M25 28.13h3.75M17.5 21.5h3.75M30 8.75v3.75M28.13 10.63h3.75" stroke-width=".6"/>
+            </svg>
+          </span>
+          <span class="step-label">Metal</span>
+        </li>
+        <li class="step">
+          <span class="bubble">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8.75 16.25L14 9.38h12l5.25 6.87L20 31.88z"/><path d="M8.75 16.25h22.5" stroke-width=".8"/>
+              <path d="M14 9.38l3 6.87m0 0l3-6.87 3 6.87m-6 0l3 15.63 3-15.63m0 0l3-6.87" stroke-width=".6"/>
+            </svg>
+          </span>
+          <span class="step-label">Diamond</span>
+        </li>
+        <li class="step">
+          <span class="bubble">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="20" cy="20" r="9.5"/><circle cx="20" cy="20" r="7.75" stroke-width=".6"/>
+              <path stroke-width=".6" d="M33.13 20H36M32.13 25.03l1.5.62M29.28 29.28l2.03 2.03M25.03 32.13l.62 1.5M20 33.13V36M14.98 32.13l-.63 1.5M10.73 29.28l-2.04 2.03M7.88 25.03l-1.5.62M6.88 20H4M7.88 14.98l-1.5-.63M10.73 10.73L8.69 8.69M14.98 7.88l-.63-1.5M20 6.88V4M25.03 7.88l.62-1.5M29.28 10.73l2.03-2.04M32.13 14.98l1.5-.63"/>
+            </svg>
+          </span>
+          <span class="step-label">Size</span>
+        </li>
+        <li class="step">
+          <span class="bubble">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8.75 20h22.5v11.25H8.75z"/><path d="M8.75 20l2.75-6.25h17L31.25 20" stroke-width=".8"/>
+              <path d="M16.25 20c0 3 7.5 3 7.5 0M20 5.63v3.75M18.13 7.5h3.75M31.25 6.88v2.5M30 8.13h2.5" stroke-width=".6"/>
+            </svg>
+          </span>
+          <span class="step-label">Review</span>
+        </li>
+      </ol>
+
+      <div class="heading">
+        <h1>Choose your ring style</h1>
+        <p>Every love story begins with a single glimmer. Find the one that feels like it was always meant for you.</p>
+      </div>
+
+      <div class="filters">
+        <label class="select">
+          <span class="select-key">Style:</span>
+          <span class="select-val" id="styleVal">Solitaire</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#1c1c1c" stroke-width=".93" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.25L7 8.75l3.5-3.5"/></svg>
+          <select id="styleSelect" aria-label="Ring style">
+            <option>Solitaire</option>
+          </select>
+        </label>
+        <label class="select">
+          <span class="select-key">Sort:</span>
+          <span class="select-val" id="sortVal">Most popular</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#1c1c1c" stroke-width=".93" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.25L7 8.75l3.5-3.5"/></svg>
+          <select id="sortSelect" aria-label="Sort rings">
+            <option value="popular">Most popular</option>
+            <option value="low">Price: low to high</option>
+            <option value="high">Price: high to low</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="list">
+        <div class="grid" id="grid" role="listbox" aria-label="Ring styles"></div>
+        <button class="btn secondary small" id="loadMore">Load more</button>
+      </div>
+
+      <footer class="panel-footer">
+        <div class="summary">
+          <div>
+            <p class="eyebrow">Your ring style</p>
+            <p class="summary-name" id="summaryName">Solitaire · Four prong, thin band</p>
+          </div>
+          <div class="price">
+            <p class="eyebrow">Setting from</p>
+            <p class="price-val" id="summaryPrice">$1,240</p>
+          </div>
+        </div>
+        <div class="footer-actions">
+          <button class="btn secondary">View details</button>
+          <button class="btn primary">Choose this ring</button>
+        </div>
+      </footer>
+    </aside>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
