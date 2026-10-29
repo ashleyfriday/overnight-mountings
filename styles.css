@@ -368,7 +368,7 @@ a { color: inherit; text-decoration: none; }
   transition: background 0.2s, color 0.2s;
 }
 .btn.secondary { background: #fff; color: var(--ink); }
-.btn.secondary:hover { background: var(--ink); color: #fff; }
+.btn.secondary:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
 .btn.primary { background: var(--navy); border-color: var(--navy); color: #fff; }
 .btn.primary:hover { background: #1b2754; }
 .btn.small { height: 44px; width: 160px; flex: none; }
