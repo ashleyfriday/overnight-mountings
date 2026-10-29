@@ -237,6 +237,12 @@ function tick() {
 const grid = document.getElementById('grid');
 const loadMore = document.getElementById('loadMore');
 const sortSelect = document.getElementById('sortSelect');
+const styleSelect = document.getElementById('styleSelect');
+const styleVal = document.getElementById('styleVal');
+const STYLE_FILTERS = ['All', 'Hidden halo', 'Three stone', 'Halo', 'Pavé', 'Nature inspired', 'Solitaire', 'Channel', 'Side stone', 'Vintage', 'Twist'];
+styleSelect.innerHTML = STYLE_FILTERS.map((f) => `<option value="${f}">${f}</option>`).join('');
+styleSelect.value = 'All';
+styleVal.textContent = 'All';
 const sortVal = document.getElementById('sortVal');
 const thumbs = new Map();
 let showMore = false;
@@ -245,7 +251,9 @@ let selected = RING_STYLES[0];
 const checkSvg = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#24346d" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 9.38l3.37 3.37 7.13-7.13"/></svg>`;
 
 function renderGrid() {
-  const list = RING_STYLES.filter((s) => showMore || !s.more);
+  const filter = styleSelect.value;
+  const inStyle = RING_STYLES.filter((s) => filter === 'All' || s.category === filter);
+  const list = inStyle.filter((s) => showMore || !s.more);
   const sort = sortSelect.value;
   list.sort((a, b) => (sort === 'low' ? a.price - b.price : sort === 'high' ? b.price - a.price : a.popular - b.popular));
   grid.innerHTML = '';
@@ -260,14 +268,21 @@ function renderGrid() {
         <span class="check">${checkSvg}</span>
       </div>
       <div class="meta">
-        <p class="kind">Solitaire</p>
+        <p class="kind">${s.category}</p>
         <p class="name">${s.name}</p>
         <p class="from">From ${fmt(s.price)}</p>
       </div>`;
     card.addEventListener('click', () => select(s));
     grid.appendChild(card);
   }
-  loadMore.hidden = showMore;
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty"><p class="empty-title">No ${filter.toLowerCase()} rings yet</p><p class="empty-copy">We're still crafting these. Try another style, or view all rings.</p><button class="btn secondary small" type="button">View all</button></div>`;
+    grid.querySelector('.empty button').addEventListener('click', () => {
+      styleSelect.value = 'All';
+      styleSelect.dispatchEvent(new Event('change'));
+    });
+  }
+  loadMore.hidden = showMore || inStyle.length === list.length;
 }
 
 function select(s) {
@@ -276,11 +291,15 @@ function select(s) {
   grid.querySelectorAll('.card').forEach((c) => {
     c.setAttribute('aria-selected', String(c.querySelector('img').dataset.id === s.id));
   });
-  document.getElementById('shownTitle').textContent = 'Solitaire · ' + s.name.charAt(0).toLowerCase() + s.name.slice(1);
-  document.getElementById('summaryName').textContent = 'Solitaire · ' + s.name;
+  document.getElementById('shownTitle').textContent = s.category + ' · ' + s.name.charAt(0).toLowerCase() + s.name.slice(1);
+  document.getElementById('summaryName').textContent = s.category + ' · ' + s.name;
   document.getElementById('summaryPrice').textContent = fmt(s.price);
 }
 
+styleSelect.addEventListener('change', () => {
+  styleVal.textContent = styleSelect.value;
+  renderGrid();
+});
 sortSelect.addEventListener('change', () => {
   sortVal.textContent = sortSelect.selectedOptions[0].textContent;
   renderGrid();

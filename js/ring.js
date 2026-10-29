@@ -5,21 +5,21 @@ import * as THREE from 'three';
 const R = 1;
 
 export const RING_STYLES = [
-  { id: 'four-thin', name: 'Four prong, thin band', price: 1240, popular: 1,
+  { id: 'four-thin', category: 'Solitaire', name: 'Four prong, thin band', price: 1240, popular: 1,
     band: { width: 0.17, thick: 0.14 }, head: { type: 'prong', prongs: 4 } },
-  { id: 'six-knife', name: 'Six prong, knife edge', price: 1380, popular: 2,
+  { id: 'six-knife', category: 'Solitaire', name: 'Six prong, knife edge', price: 1380, popular: 2,
     band: { width: 0.18, thick: 0.15, knife: 0.55 }, head: { type: 'prong', prongs: 6 } },
-  { id: 'bezel-low', name: 'Bezel set, low profile', price: 1160, popular: 3,
+  { id: 'bezel-low', category: 'Solitaire', name: 'Bezel set, low profile', price: 1160, popular: 3,
     band: { width: 0.19, thick: 0.15 }, head: { type: 'bezel' } },
-  { id: 'cathedral', name: 'Cathedral, tapered band', price: 1420, popular: 4,
+  { id: 'cathedral', category: 'Solitaire', name: 'Cathedral, tapered band', price: 1420, popular: 4,
     band: { width: 0.24, thick: 0.15, taper: 0.45 }, head: { type: 'prong', prongs: 4, cathedral: true } },
-  { id: 'hidden-accent', name: 'Hidden accent, plain band', price: 1510, popular: 5,
+  { id: 'hidden-accent', category: 'Hidden halo', name: 'Hidden accent, plain band', price: 1510, popular: 5,
     band: { width: 0.18, thick: 0.15 }, head: { type: 'prong', prongs: 4, hiddenHalo: true } },
-  { id: 'twisted-petite', name: 'Twisted prong, petite', price: 1290, popular: 6,
+  { id: 'twisted-petite', category: 'Twist', name: 'Twisted prong, petite', price: 1290, popular: 6,
     band: { width: 0.13, thick: 0.12 }, head: { type: 'prong', prongs: 4, twist: 0.9, stone: 0.33 } },
-  { id: 'trellis', name: 'Trellis prong, comfort fit', price: 1350, popular: 7, more: true,
+  { id: 'trellis', category: 'Solitaire', name: 'Trellis prong, comfort fit', price: 1350, popular: 7, more: true,
     band: { width: 0.18, thick: 0.15 }, head: { type: 'prong', prongs: 4, trellis: true } },
-  { id: 'six-classic', name: 'Six prong, high set', price: 1330, popular: 8, more: true,
+  { id: 'six-classic', category: 'Solitaire', name: 'Six prong, high set', price: 1330, popular: 8, more: true,
     band: { width: 0.16, thick: 0.14 }, head: { type: 'prong', prongs: 6, high: 0.12 } },
 ];
 
