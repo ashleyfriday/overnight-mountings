@@ -167,11 +167,12 @@ splitBtn.addEventListener('click', () => {
   const on = state.sepTarget === 1;
   splitBtn.setAttribute('aria-pressed', String(on));
   splitBtn.setAttribute('aria-label', on ? 'Set the diamond back in the ring' : 'Separate the diamond from the ring');
-  splitBtn.title = on ? 'Set diamond back' : 'Separate diamond';
+  splitBtn.dataset.tip = on ? 'Set diamond back' : 'Separate diamond';
 });
 function setZoom(z) {
   state.zoomTarget = THREE.MathUtils.clamp(z, 0, 1);
   zoomBtn.setAttribute('aria-pressed', String(state.zoomTarget > 0.5));
+  zoomBtn.dataset.tip = state.zoomTarget > 0.5 ? 'Zoom out' : 'Zoom in';
 }
 
 // ---------------------------------------------------------------------------
