@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ring Studio Noir</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090a;--bg-2:#111113;--bg-3:#18181b;--line:rgba(255,255,255,.09);--line-2:rgba(255,255,255,.18);
+  --ink:#f3f0ea;--soft:#a9a59d;--faint:#6f6c66;--gold:#e0bf7a;--gold-2:#c9a35c;--gold-ink:#1a150c;
+  --serif:"Cormorant Garamond",Georgia,serif;--sans:"Jost",system-ui,sans-serif;--p:0;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:300 15px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+img{display:block;max-width:100%}
+.num{font-variant-numeric:tabular-nums}
+.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;flex:none}
+:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
+.serif{font-family:var(--serif)}
+
+/* black silk backdrop */
+.silk{position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+  radial-gradient(60% 42% at 22% 18%,rgba(255,255,255,.07),transparent 70%),
+  radial-gradient(48% 36% at 82% 30%,rgba(255,255,255,.05),transparent 70%),
+  linear-gradient(118deg,transparent 30%,rgba(255,255,255,.035) 42%,transparent 52%,rgba(255,255,255,.03) 64%,transparent 74%),
+  linear-gradient(64deg,transparent 46%,rgba(0,0,0,.5) 58%,transparent 70%),
+  var(--bg)}
+
+/* metal tint on the cut-out photos */
+.y img{filter:sepia(.55) saturate(1.8) hue-rotate(-8deg) brightness(1.03)}
+.r img{filter:sepia(.5) saturate(1.5) hue-rotate(-32deg) brightness(1.04)}
+.p img{filter:contrast(1.06) brightness(.97)}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;inset:0 0 auto;z-index:40;height:66px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 clamp(16px,3vw,40px);transition:background .4s,border-color .4s;border-bottom:1px solid transparent}
+body.scrolled .nav{background:rgba(9,9,10,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-color:var(--line)}
+.nav .links{display:flex;gap:28px;font-size:13.5px;color:var(--soft)}
+.nav .links a{color:inherit;text-decoration:none}.nav .links a:hover{color:var(--ink)}
+.logo{height:19px;filter:brightness(0) invert(.94)}
+.nav .right{display:flex;justify-content:flex-end;align-items:center;gap:12px}
+.saved-btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:99px;border:1px solid var(--line-2);font-size:13px;color:var(--soft)}
+.saved-btn:hover{color:var(--ink);border-color:rgba(255,255,255,.35)}
+.saved-btn b{font-weight:500;color:var(--gold)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:42px;padding:0 22px;border-radius:99px;font-size:14px;font-weight:400;white-space:nowrap;transition:transform .2s,background .2s,border-color .2s,color .2s}
+.btn.gold{background:var(--gold);color:var(--gold-ink);font-weight:500}
+.btn.gold:hover{background:#ebcd8d}
+.btn.line{border:1px solid var(--line-2);color:var(--ink)}
+.btn.line:hover{border-color:rgba(255,255,255,.4)}
+.btn.sm{height:36px;padding:0 16px;font-size:13px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---------- intro: first visit ---------- */
+#intro{position:relative;min-height:100svh;padding:96px clamp(16px,4vw,56px) 64px;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+body.has-ring #intro{display:none}
+.word{position:absolute;left:0;right:0;text-align:center;font-family:var(--serif);font-weight:500;text-transform:uppercase;line-height:.9;white-space:nowrap;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.17),rgba(255,255,255,.02) 78%);-webkit-background-clip:text;background-clip:text;color:transparent}
+#intro .word{top:78px;font-size:clamp(84px,16vw,250px);letter-spacing:.02em}
+/* the brand mark as the big faded backdrop word */
+.word.mark{left:50%;right:auto;width:min(90vw,1240px);transform:translateX(-50%);top:96px;background:none}
+.word.mark img{width:100%;filter:brightness(0) invert(1);opacity:.2;-webkit-mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.15) 85%);mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.15) 85%)}
+.brand{transition:opacity .4s,transform .4s}
+
+.intro-h{position:relative;text-align:center;margin-top:clamp(20px,3.5vw,56px)}
+.intro-h h1{margin:0;font:400 clamp(46px,6.2vw,92px)/1.02 var(--serif)}
+.intro-h h1 em{color:var(--gold)}
+.intro-h p{margin:14px auto 0;max-width:600px;color:var(--soft)}
+.trend{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(10px,2vw,28px);width:100%;max-width:1240px;margin-top:clamp(36px,5vw,64px)}
+.tr{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:10px 6px 18px;border-radius:20px;transition:background .35s}
+.tr .im{position:relative;width:100%;aspect-ratio:1;display:grid;place-items:center}
+.tr .im::after{content:"";position:absolute;left:18%;right:18%;bottom:10%;height:12%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.12),transparent);filter:blur(4px)}
+.tr img{width:88%;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.tr:hover{background:rgba(255,255,255,.03)}
+.tr:hover img{transform:translateY(-8px) scale(1.04)}
+.tr b{font:500 22px/1.1 var(--serif)}
+.tr small{font-size:13px;color:var(--soft)}
+.tr .go{margin-top:8px;font-size:12.5px;color:var(--gold);opacity:0;transform:translateY(4px);transition:.3s}
+.tr:hover .go,.tr:focus-visible .go{opacity:1;transform:none}
+.or{position:relative;margin-top:30px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--soft);font-size:13.5px}
+.or a{color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:8px;border-bottom:1px solid var(--line-2);padding-bottom:3px}
+.or a:hover{border-color:var(--gold)}
+
+/* ---------- hero: your ring ---------- */
+#hero{position:relative;z-index:1;pointer-events:none;height:100svh;min-height:680px;overflow-x:clip;display:none}
+body.has-ring #hero{display:block}
+#hero .word{top:92px;font-size:clamp(90px,17vw,270px);opacity:calc(1 - var(--p)*1.4);transform:translateY(calc(var(--p)*-40px))}
+.stage{position:absolute;inset:0;display:grid;place-items:center;padding-bottom:170px;perspective:1200px}
+.stage .glow{position:absolute;width:min(70vh,720px);aspect-ratio:1;border-radius:50%;background:radial-gradient(closest-side,rgba(255,250,240,.11),rgba(255,250,240,.03) 55%,transparent);top:50%;left:50%;transform:translate(-50%,-56%)}
+.ring{position:relative;width:min(56vh,600px);transform:translateY(calc(var(--p)*10vh)) scale(calc(1 - var(--p)*.16));transition:opacity .25s}
+.ring img{width:100%;filter:drop-shadow(0 30px 40px rgba(0,0,0,.6));animation:float 7s ease-in-out infinite}
+.ring.y img{filter:sepia(.55) saturate(1.8) hue-rotate(-8deg) brightness(1.03) drop-shadow(0 30px 40px rgba(0,0,0,.6))}
+.ring.r img{filter:sepia(.5) saturate(1.5) hue-rotate(-32deg) brightness(1.04) drop-shadow(0 30px 40px rgba(0,0,0,.6))}
+.ring.swap{opacity:0}
+.stage.spinning .ring img{animation:spin 6s linear infinite}
+@keyframes float{50%{transform:translateY(-10px)}}
+@keyframes spin{from{transform:perspective(1100px) rotateY(0)}to{transform:perspective(1100px) rotateY(360deg)}}
+.htxt{position:absolute;left:clamp(16px,4vw,56px);top:clamp(110px,16vh,150px);max-width:320px;opacity:calc(1 - var(--p)*1.2)}
+.htxt .eb{font-size:12.5px;color:var(--soft);letter-spacing:.06em}
+.htxt h1{margin:8px 0 6px;font:400 clamp(40px,4.4vw,60px)/1 var(--serif)}
+.htxt h1 em{font-style:italic;color:var(--soft)}
+.htxt .spec{color:var(--soft);font-size:14px}
+.htxt .price{margin-top:18px;font-size:26px;font-weight:300}
+.htxt .price small{font-size:12.5px;color:var(--faint);margin-left:8px}
+.hact{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+.ibtn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 15px;border-radius:99px;border:1px solid var(--line-2);font-size:13px;color:var(--soft);transition:.2s}
+.ibtn:hover{color:var(--ink);border-color:rgba(255,255,255,.4)}
+.ibtn[aria-pressed="true"]{color:var(--gold);border-color:rgba(224,191,122,.55)}
+.ibtn[aria-pressed="true"] .ic{fill:currentColor}
+/* vertical stepper */
+/* control bar */
+.htxt,.bar,#vstep{pointer-events:auto}
+.dock{pointer-events:none;position:absolute;left:clamp(12px,3vw,40px);right:clamp(12px,3vw,40px);bottom:clamp(12px,3vh,28px);display:flex;flex-direction:column;align-items:center;gap:14px;z-index:2}
+#vstep{transform-origin:50% 0;will-change:transform}
+#vstep button:not([aria-current="true"]):not(.done) .dot{background:var(--bg)}
+body:not(.hero-steps) #vstep{visibility:hidden}
+.bar{position:relative;align-self:stretch;display:flex;align-items:stretch;gap:0;padding:14px 8px 14px 4px;border-radius:20px;border:1px solid var(--line);background:rgba(17,17,19,.62);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);opacity:calc(1 - var(--t,0)*1.7);transform:translateY(calc(var(--t,0)*var(--D,0px))) scale(calc(1 - var(--t,0)*.04))}
+body.bar-gone .bar{visibility:hidden}
+.bar .gs{display:flex;align-items:stretch;flex:1;min-width:0}
+.bar .g{position:relative;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:0 clamp(12px,1.6vw,22px);border-left:1px solid var(--line);min-width:0}
+.bar .g:first-child{border-left:0}
+.bar .k{font-size:11.5px;color:var(--faint);letter-spacing:.04em;white-space:nowrap}
+.bar .v{display:flex;align-items:center;gap:8px;min-height:30px;white-space:nowrap}
+.bar .fill{flex:1}
+.bar .end{display:flex;align-items:center;gap:16px;padding-left:18px;border-left:1px solid var(--line);margin-left:auto}
+.bar .tot{display:flex;flex-direction:column;align-items:flex-end}
+.bar .tot b{font-size:21px;font-weight:300}
+.drop{display:inline-flex;align-items:center;gap:8px;font-size:14px}
+.drop .ic{width:14px;height:14px;color:var(--soft)}
+.drop:hover{color:var(--gold)}
+.sw{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);position:relative}
+.sw[aria-pressed="true"]::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:1px solid var(--gold)}
+.chip{height:30px;padding:0 12px;border-radius:99px;border:1px solid var(--line-2);font-size:13px;color:var(--soft)}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{border-color:var(--gold);color:var(--gold)}
+.chip:disabled{opacity:.35;cursor:not-allowed}
+.step-n{display:inline-flex;align-items:center;gap:12px}
+.step-n button{width:28px;height:28px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--soft);font-size:16px;line-height:1}
+.step-n button:hover{color:var(--ink);border-color:rgba(255,255,255,.4)}
+.step-n output{min-width:62px;text-align:center}
+.shp{display:flex;gap:4px}
+.shp button{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:var(--faint)}
+.shp button:hover{color:var(--ink)}
+.shp button[aria-pressed="true"]{color:var(--gold);background:rgba(224,191,122,.1)}
+.filters-btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:99px;border:1px solid var(--line-2);font-size:13px}
+.filters-btn:hover{border-color:var(--gold);color:var(--gold)}
+.filters-btn b{min-width:18px;height:18px;border-radius:9px;background:var(--gold);color:var(--gold-ink);font-size:11px;font-weight:500;display:grid;place-items:center;padding:0 5px}
+.pop{position:absolute;bottom:calc(100% + 16px);left:8px;min-width:240px;padding:8px;border-radius:16px;border:1px solid var(--line);background:rgba(22,22,25,.96);backdrop-filter:blur(18px);box-shadow:0 20px 50px rgba(0,0,0,.5);display:none;z-index:5}
+.pop.on{display:block;animation:rise .25s ease}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}}
+.pop button{display:flex;align-items:center;gap:12px;width:100%;padding:9px 12px;border-radius:10px;font-size:14px;color:var(--soft);text-align:left}
+.pop button:hover{background:rgba(255,255,255,.05);color:var(--ink)}
+.pop button[aria-pressed="true"]{color:var(--gold)}
+.pop button .ic{width:22px;height:22px;stroke-width:1}
+.pop button small{margin-left:auto;color:var(--faint);font-size:12px}
+.pop.grid2{display:none;grid-template-columns:1fr 1fr;min-width:400px}
+.pop.grid2.on{display:grid}
+
+/* ---------- mini floating unit ---------- */
+.mini{position:fixed;top:78px;left:50%;z-index:39;display:flex;align-items:center;gap:14px;padding:8px 8px 8px 8px;border-radius:99px;border:1px solid var(--line);background:rgba(20,20,23,.86);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 18px 50px rgba(0,0,0,.45);
+  transform:translate(-50%,-14px) scale(.96);opacity:0;pointer-events:none;transition:opacity .35s,transform .45s cubic-bezier(.2,.7,.2,1);max-width:calc(100vw - 24px)}
+body.mini-on .mini{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.mini .th{width:46px;height:46px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.1),transparent);display:grid;place-items:center;flex:none}
+.mini .th img{width:44px}
+.mini .tx{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.mini .tx b{font:500 18px/1.1 var(--serif);white-space:nowrap}
+.mini .tx small{color:var(--soft);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini .sep{width:1px;align-self:stretch;margin:6px 0;background:var(--line)}
+.slots{display:flex;gap:6px;align-items:center}
+.slot{width:30px;height:30px;border-radius:50%;border:1px dashed rgba(255,255,255,.2);display:grid;place-items:center;overflow:hidden}
+.slot.full{border:1px solid var(--line-2);background:var(--bg-3)}
+.slot.full img{width:28px}
+.slot.cur{border-color:var(--gold)}
+.sw-slot{position:relative;display:inline-flex}
+.sw-slot .rm{position:absolute;top:-5px;right:-5px;width:16px;height:16px;border-radius:50%;background:#2a2a2f;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--ink);opacity:.85;transition:opacity .2s,background .2s}
+.sw-slot .rm .ic{width:9px;height:9px;stroke-width:2}
+.sw-slot .rm:hover{opacity:1;background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}
+.mini .ibtn{height:34px}
+
+/* ---------- builder listing ---------- */
+#build{position:relative;padding:72px clamp(16px,4vw,56px) 80px;max-width:1440px;margin:0 auto;scroll-margin-top:84px}
+/* with a ring picked, the listing tucks up under the control bar so no empty band is left once it fades */
+body.has-ring #build{margin-top:-140px;padding-top:36px;scroll-margin-top:124px}
+.bhead{display:grid;grid-template-columns:1fr auto 1fr;align-items:start}
+.back{position:fixed;z-index:38;top:84px;left:clamp(16px,3vw,40px);display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px 0 10px;border-radius:99px;font-size:13.5px;color:var(--soft);background:rgba(9,9,10,.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:color .2s,opacity .3s}
+.back:hover{color:var(--ink)}
+body:not(.has-ring) .back{display:none}
+.hstep{display:flex;align-items:flex-start}
+.hstep button{display:flex;flex-direction:column;align-items:center;gap:8px;width:110px;font-size:13px;color:var(--faint);position:relative}
+.hstep button+button::before{content:"";position:absolute;top:15px;right:calc(50% + 22px);width:calc(100% - 44px);height:1px;background:var(--line-2)}
+.hstep .dot{width:30px;height:30px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;font-size:13px;color:var(--soft)}
+.hstep button[aria-current="true"]{color:var(--ink)}
+.hstep button[aria-current="true"] .dot{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.hstep button.done .dot{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
+.hstep button.done .dot .ic{width:14px;height:14px;stroke-width:2}
+.hstep button:disabled{cursor:not-allowed}
+body.hero-steps #hstep{visibility:hidden}
+.btitle{text-align:center;margin:34px 0 0}
+.btitle h2{margin:0;font:400 clamp(34px,3.6vw,48px)/1.1 var(--serif)}
+.btitle p{margin:8px 0 0;color:var(--soft)}
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:16px 12px;margin:40px 0 26px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.qs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0;padding:2px 28px 2px 2px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent)}
+.qs::-webkit-scrollbar{display:none}
+.qs button{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px 0 10px;border-radius:99px;border:1px solid transparent;font-size:13.5px;color:var(--soft);white-space:nowrap}
+.qs button .ic{width:20px;height:20px;stroke-width:1}
+.qs button:hover{color:var(--ink)}
+.qs button[aria-pressed="true"]{border-color:var(--line-2);color:var(--ink);background:rgba(255,255,255,.04)}
+.tools .qs{flex:1 0 100%}
+.tools .cnt{color:var(--faint);font-size:13px;white-space:nowrap;margin-right:auto}
+.sort{height:36px;border-radius:99px;border:1px solid var(--line-2);padding:0 40px 0 16px;font-size:13px;color:var(--soft);cursor:pointer;-webkit-appearance:none;appearance:none;
+  background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a9a59d' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E") no-repeat right 16px center/14px}
+.sort:hover{border-color:rgba(255,255,255,.4);color:var(--ink)}
+.sort option{background:#151517}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,1.6vw,22px)}
+.card{position:relative;display:flex;flex-direction:column;text-align:left}
+.card .tile{position:relative;aspect-ratio:1;border-radius:18px;background:radial-gradient(80% 70% at 50% 42%,#1d1d21,#121214 70%);border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;transition:border-color .3s}
+.card .tile img{width:82%;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.card:hover .tile{border-color:var(--line-2)}
+.card:hover .tile img{transform:scale(1.05)}
+.card.sel .tile{border-color:var(--gold)}
+.card .pick{position:absolute;inset:0;z-index:1;border-radius:18px}
+.card .heart{position:absolute;top:12px;right:12px;z-index:2;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--soft);background:rgba(0,0,0,.25)}
+.card .heart:hover{color:var(--ink)}
+.card .heart[aria-pressed="true"]{color:var(--gold)}
+.card .heart[aria-pressed="true"] .ic{fill:currentColor}
+.card .badge{position:absolute;top:12px;left:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:99px;background:var(--gold);color:var(--gold-ink);font-size:12px;font-weight:500}
+.card .badge .ic{width:13px;height:13px;stroke-width:2}
+.card .meta{padding:14px 4px 0;display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.card b{font:500 22px/1.15 var(--serif)}
+.card small{display:block;color:var(--soft);font-size:13px}
+.card .pr{font-size:15px;white-space:nowrap}
+.card .pr small{text-align:right;color:var(--faint);font-size:11.5px}
+/* diamond tiles */
+.dtile{position:relative;color:#d9dce2}
+.dtile svg{width:38%;filter:drop-shadow(0 0 18px rgba(255,255,255,.12))}
+.dtile .spark{position:absolute;width:42%;aspect-ratio:1;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.1),transparent);top:29%;left:29%}
+.dfacts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;padding:0 4px}
+.dfacts span{font-size:12px;color:var(--soft);border:1px solid var(--line);border-radius:99px;padding:2px 9px}
+.more{display:flex;justify-content:center;margin-top:36px}
+.empty{grid-column:1/-1;padding:60px 0;text-align:center;color:var(--soft)}
+/* review */
+.review{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,4vw,64px);align-items:center;margin-top:36px}
+.review .rimg{aspect-ratio:1;border-radius:24px;background:radial-gradient(70% 60% at 50% 45%,#202024,#111113 75%);border:1px solid var(--line);display:grid;place-items:center}
+.review .rimg img{width:78%}
+dl.sp{display:grid;grid-template-columns:auto 1fr;gap:12px 28px;margin:0}
+dl.sp dt{color:var(--faint);font-size:13.5px}
+dl.sp dd{margin:0}
+.totals{margin-top:26px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.totals div{display:flex;justify-content:space-between}
+.totals .big{font-size:26px;font-weight:300}
+.note{color:var(--faint);font-size:13px;margin-top:18px}
+
+/* ---------- modal ---------- */
+.scrim{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+.scrim.on{display:flex;animation:fade .25s}
+@keyframes fade{from{opacity:0}}
+.sheet{width:min(860px,100%);max-height:min(86vh,900px);display:flex;flex-direction:column;border-radius:24px;border:1px solid var(--line);background:#121214;box-shadow:0 40px 90px rgba(0,0,0,.6);animation:rise .3s ease}
+.sheet.wide{width:min(1160px,100%)}
+.sheet header{display:flex;align-items:center;justify-content:space-between;padding:22px 26px;border-bottom:1px solid var(--line)}
+.sheet header h3{margin:0;font:400 28px/1.1 var(--serif)}
+.sheet header small{display:block;color:var(--soft);font-size:13px;margin-top:4px}
+.x{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--soft)}
+.x:hover{color:var(--ink)}
+.sheet .body{overflow:auto;padding:8px 26px 26px}
+.sheet footer{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 26px;border-top:1px solid var(--line)}
+.fs{padding:20px 0;border-bottom:1px solid var(--line)}
+.fs:last-child{border-bottom:0}
+.fs h4{margin:0 0 14px;font-size:13px;font-weight:400;color:var(--soft);display:flex;justify-content:space-between}
+.fs h4 small{color:var(--faint)}
+.grp-t{margin:22px 0 0;font:400 20px/1 var(--serif);color:var(--gold)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{display:inline-flex;align-items:center;gap:9px;min-height:38px;padding:6px 14px;border-radius:12px;border:1px solid var(--line-2);font-size:13.5px;color:var(--soft)}
+.opt:hover{color:var(--ink)}
+.opt[aria-pressed="true"]{border-color:var(--gold);color:var(--ink);background:rgba(224,191,122,.06)}
+.opt .ic{width:24px;height:24px;stroke-width:1}
+.opt small{color:var(--faint);font-size:12px}
+.opt.tall{flex-direction:column;justify-content:center;width:96px;height:86px;gap:6px}
+.opt.tall .ic{width:30px;height:30px}
+.rng{display:flex;align-items:center;gap:16px}
+.rng input[type=range]{flex:1;accent-color:var(--gold)}
+.rng output{min-width:86px;text-align:right}
+.field{height:42px;border-radius:12px;border:1px solid var(--line-2);background:transparent;padding:0 14px;min-width:120px}
+.field option{background:#151517}
+.engr{display:flex;align-items:center;gap:12px}
+.engr input{flex:1;max-width:380px}
+.engr small{color:var(--faint)}
+.link{color:var(--gold);font-size:13px;border-bottom:1px solid rgba(224,191,122,.4)}
+/* compare */
+.cmp{display:grid;gap:0;margin-top:14px}
+.cmp .col{padding:0 16px;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:0}
+.cmp .col:first-child{border-left:0}
+.cmp .ci{aspect-ratio:4/3;border-radius:16px;background:radial-gradient(70% 60% at 50% 45%,#1f1f23,#141416 75%);display:grid;place-items:center;margin-bottom:12px}
+.cmp .ci img{width:auto;max-height:84%}
+.cmp .cn{font:500 22px/1.1 var(--serif)}
+.cmp .row{padding:10px 0;border-top:1px solid var(--line);font-size:13.5px}
+.cmp .row span{display:block;color:var(--faint);font-size:11.5px}
+.cmp .row.best{color:var(--gold)}
+.cmp .acts{display:flex;gap:8px;margin-top:14px}
+.toast{position:fixed;left:50%;bottom:clamp(110px,16vh,140px);transform:translateX(-50%);z-index:80;padding:11px 18px;border-radius:99px;background:#f3f0ea;color:#111;font-size:13.5px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .bar{overflow-x:auto;scrollbar-width:none}
+  .bar::-webkit-scrollbar{display:none}
+}
+@media (max-width:760px){
+  .nav{grid-template-columns:auto 1fr}.nav .links{display:none}.nav .brand{order:-1}
+  .nav .right .btn{display:none}
+  .trend{grid-template-columns:repeat(5,72%);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .tr{scroll-snap-align:center}.tr .go{opacity:1;transform:none}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .card b{font-size:18px}.card .meta{flex-direction:column;gap:2px}.card .pr small{text-align:left}
+  .htxt{top:118px;max-width:none;right:16px}.htxt h1{font-size:38px}.htxt .price{margin-top:8px;font-size:21px}.hact{display:none}
+  .stage{padding-bottom:230px}.ring{width:min(78vw,52vh)}
+  .bar{flex-direction:column;gap:12px;padding:12px 0;overflow:visible}
+  .bar .gs{overflow-x:auto;scrollbar-width:none;padding:0 4px}
+  .bar .gs::-webkit-scrollbar{display:none}
+  .bar .g{flex:none}
+  .bar .end{margin:0;padding:12px 14px 0;border-left:0;border-top:1px solid var(--line);justify-content:space-between}
+  .bar .tot{align-items:flex-start}
+  .pop,.pop.grid2{position:fixed;left:8px;right:8px;bottom:calc(100% + 10px);min-width:0}
+  .bhead{grid-template-columns:1fr}.back{top:72px}body.mini-on .back{opacity:0;pointer-events:none}.hstep{justify-self:center}.hstep button{width:92px}
+  .review{grid-template-columns:1fr}
+  .mini{top:72px;gap:10px;left:12px;right:12px;transform:translateY(-14px);max-width:none}body.mini-on .mini{transform:none}.mini .slots,.mini .sep,.mini [data-compare]{display:none}.mini .tx{flex:1}.mini .tx small{max-width:none}
+  .pop.grid2{min-width:280px;grid-template-columns:1fr}
+  .sheet{max-height:92vh}.cmp{overflow-x:auto}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="silk" aria-hidden="true"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5m6-6-6 6 6 6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14m-6-6 6 6 6-6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10m4 0h2M4 17h4m4 0h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+  <symbol id="i-spin" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v4h-4"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-cmp" viewBox="0 0 24 24"><rect x="3.5" y="5" width="7" height="14" rx="1.5"/><rect x="13.5" y="5" width="7" height="14" rx="1.5"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5m0-8.2v.2"/></symbol>
+</svg>
+
+<header class="nav">
+  <nav class="links" aria-label="Main"><a href="#build" data-jump="1">Settings</a><a href="#build" data-jump="2">Diamonds</a><a href="#build" data-jump="3">Review</a></nav>
+  <a class="brand" href="#top" data-top aria-label="Overnight home"><img class="logo" src="assets/overnight-logo.png" alt="Overnight"></a>
+  <div class="right"><button class="saved-btn" data-compare><svg class="ic"><use href="#i-heart"/></svg>Saved <b id="savedN">0</b></button><button class="btn gold sm" data-info="Opens the existing appointment booking">Book an appointment</button></div>
+</header>
+
+<main id="top">
+  <!-- first visit -->
+  <section id="intro" aria-labelledby="introH">
+    <div class="intro-h">
+      <h1 id="introH">Your dream ring, <em>made by you.</em></h1>
+      <p>Start with one of this season's favorites, or build your own and bring your vision to life.</p>
+    </div>
+    <div class="trend" id="trend"></div>
+    <div class="or"><span>or</span><a href="#build" data-jump="1">Build your own<svg class="ic"><use href="#i-down"/></svg></a></div>
+  </section>
+
+  <!-- your ring as the hero -->
+  <section id="hero" aria-label="Your ring">
+    <div class="word" id="hWord" aria-hidden="true"></div>
+    <div class="stage" id="stage"><div class="glow"></div><div class="ring" id="ring"></div></div>
+    <div class="htxt" id="htxt"></div>
+    <div class="dock"><nav class="hstep" id="vstep" aria-label="Steps"></nav><div class="bar" id="bar"></div></div>
+  </section>
+
+  <!-- listing -->
+  <section id="build">
+    <div class="bhead">
+      <span></span>
+      <nav class="hstep" id="hstep" aria-label="Progress"></nav>
+      <span></span>
+    </div>
+    <div class="btitle"><h2 id="bT"></h2><p id="bS"></p></div>
+    <div id="bBody"></div>
+  </section>
+</main>
+
+<button class="back" id="back"><svg class="ic"><use href="#i-back"/></svg>Back to listing</button>
+<div class="mini" id="mini" aria-label="Your ring"></div>
+<div class="scrim" id="scrim"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ---------- data ---------- */
+const STYLES=[
+ {id:"solitaire",name:"Solitaire",base:1150},{id:"hidden-halo",name:"Hidden Halo",base:1650},{id:"halo",name:"Halo",base:2100},
+ {id:"pave",name:"Pavé",base:1800},{id:"three-stone",name:"Three Stone",base:2900},{id:"side-stone",name:"Side Stone",base:2300},
+ {id:"channel",name:"Channel",base:2200},{id:"twist",name:"Twist",base:1700},{id:"nature-inspired",name:"Nature",base:1950},{id:"vintage",name:"Vintage",base:2400}
+];
+const NAMES=["Aurelia","Mira","Vela","Celeste","Lys","Nova","Elise","Seren","Isla","Orra","Etta","Juno","Cora","Wren","Esme","Thea","Margaux","Odile","Ines","Rhea"];
+const TWEAK=["Classic","Petite","Cathedral","Low set","Bold","Tapered","Knife edge","Milgrain"];
+const SETTINGS=[];STYLES.forEach((s,si)=>{for(let i=0;i<8;i++){const n=NAMES[(si*3+i*7)%NAMES.length];
+  SETTINGS.push({id:`${s.id}-${i}`,style:s.id,name:n,tweak:TWEAK[(i+si)%TWEAK.length],base:Math.round(s.base*(.84+(i%5)*.09)/10)*10,no:String(51200+si*311+i*37)})}});
+const TRENDING=["solitaire-0","halo-0","three-stone-1","twist-2","vintage-0"];
+const TAGS={"solitaire":"Classic & timeless","hidden-halo":"Subtle elegance","halo":"Extra brilliance","pave":"Delicate sparkle","three-stone":"Meaningful design","side-stone":"Quiet detail","channel":"Sleek & secure","twist":"Intertwined lines","nature-inspired":"Organic forms","vintage":"Inspired by the past"};
+const METALS=[["w","White gold","radial-gradient(circle at 34% 30%,#fbfbfb,#d6d7d9 45%,#a9acb1)"],["y","Yellow gold","radial-gradient(circle at 34% 30%,#f3e2b3,#d6b46e 48%,#ad8644)"],["r","Rose gold","radial-gradient(circle at 34% 30%,#f7ddd0,#dfaa94 48%,#b97c68)"],["p","Platinum","radial-gradient(circle at 34% 30%,#f1f2f4,#c2c5ca 45%,#8f939a)"]];
+const WIDTHS=[["1.5",-40],["2.0",0],["2.5",90],["3.0",180]];
+const PRONGS=[["classic","Classic",0],["petite","Petite",0],["knife","Knife edge",40],["claw","Claw",60]];
+const BANDS=[{id:"comfort",name:"Comfort fit",add:0},{id:"knife",name:"Knife edge",add:60},{id:"pave",name:"Micro pavé",add:420},{id:"split",name:"Split pavé",add:700},{id:"twist",name:"Twist",add:280}];
+const PRICEB=[["any","Any price",0,1e9],["u1500","Under $1,500",0,1500],["15-25","$1,500 – $2,500",1500,2500],["25+","$2,500 and up",2500,1e9]];
+const SHAPES=["round","oval","cushion","emerald","pear","princess","radiant","marquise"];
+const CLAR=["FL","IF","VVS1","VVS2","VS1","VS2","SI1","SI2"],COLS=["D","E","F","G","H","I","J"],CUTS=["Ideal","Excellent","Very good"];
+const DIAMONDS=(()=>{const out=[];let seed=11;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280};
+  for(let i=0;i<160;i++){const ct=+(0.5+rnd()*2.9).toFixed(2),cl=Math.floor(rnd()*8),co=Math.floor(rnd()*7),lab=rnd()<.6,sh=SHAPES[Math.floor(rnd()*SHAPES.length)];
+    const nat=Math.pow(ct,1.75)*5600*(1.35-co*.06)*(1.4-cl*.07);out.push({id:"D"+(1000+i),ct,clar:CLAR[cl],col:COLS[co],lab,shape:sh,cut:CUTS[Math.floor(rnd()*3)],price:Math.round((lab?nat*.2:nat)/10)*10,cert:lab?"IGI":"GIA"})}
+  return out})();
+
+/* thin line icons */
+const BASE=`<ellipse cx="12" cy="16" rx="7" ry="4.2"/>`;
+const SICON={
+  "solitaire":`${BASE}<path d="M12 6.2 14.6 9 12 11.8 9.4 9Z"/>`,
+  "hidden-halo":`${BASE}<path d="M12 5.6 14.4 8.2 12 10.8 9.6 8.2Z"/><path d="M9.6 11.6q2.4 1.2 4.8 0"/>`,
+  "halo":`${BASE}<circle cx="12" cy="8.6" r="2"/><circle cx="12" cy="8.6" r="3.8" stroke-dasharray="1.2 1.2"/>`,
+  "pave":`${BASE}<path d="M12 6.2 14.6 9 12 11.8 9.4 9Z"/><path d="M5.6 14.6v.1M7.3 13.2v.1M16.7 13.2v.1M18.4 14.6v.1" stroke-width="1.8"/>`,
+  "three-stone":`${BASE}<circle cx="12" cy="8.8" r="2.4"/><circle cx="7.6" cy="10.4" r="1.5"/><circle cx="16.4" cy="10.4" r="1.5"/>`,
+  "side-stone":`${BASE}<path d="M12 6.2 14.6 9 12 11.8 9.4 9Z"/><path d="m6.8 11.8 1 1-1 1-1-1Zm10.4 0 1 1-1 1-1-1Z"/>`,
+  "channel":`<ellipse cx="12" cy="16" rx="7" ry="4.2"/><ellipse cx="12" cy="16" rx="5.6" ry="3"/><path d="M12 6.2 14.6 9 12 11.8 9.4 9Z"/>`,
+  "twist":`<path d="M5 16c2-4 5 2 7-2.2s5 1.8 7 2.2M5 16c1 3 5 4.2 7 4.2s6-1.2 7-4.2"/><path d="M12 5.6 14.4 8.2 12 10.8 9.6 8.2Z"/>`,
+  "nature-inspired":`${BASE}<path d="M12 6.2 14.6 9 12 11.8 9.4 9Z"/><path d="M15.5 11.2c1.8-.2 2.6-1.4 2.6-2.8-1.6 0-2.6.9-2.6 2.8Zm-7 0c-1.8-.2-2.6-1.4-2.6-2.8 1.6 0 2.6.9 2.6 2.8Z"/>`,
+  "vintage":`${BASE}<path d="M12 5.4 15 7.1v3.4L12 12.2 9 10.5V7.1Z"/><circle cx="12" cy="8.8" r="1.1"/>`
+};
+const SHAPEPATH={round:`<circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16M6.3 6.3l11.4 11.4M17.7 6.3 6.3 17.7" opacity=".35"/>`,oval:`<ellipse cx="12" cy="12" rx="6" ry="9"/><ellipse cx="12" cy="12" rx="3" ry="5" opacity=".35"/>`,cushion:`<rect x="4.5" y="4.5" width="15" height="15" rx="4.5"/><rect x="8.5" y="8.5" width="7" height="7" rx="2" opacity=".35"/>`,emerald:`<polygon points="8,3 16,3 18,5 18,19 16,21 8,21 6,19 6,5"/><rect x="9" y="7" width="6" height="10" opacity=".4"/>`,pear:`<path d="M12 3 C15 8 18 11 18 15 A6 6 0 0 1 6 15 C6 11 9 8 12 3Z"/><path d="M12 9v9" opacity=".35"/>`,princess:`<rect x="5" y="5" width="14" height="14"/><path d="M5 5l14 14M19 5 5 19" opacity=".35"/>`,radiant:`<polygon points="8,4 16,4 19,7 19,17 16,20 8,20 5,17 5,7"/><path d="M8 4l8 16M16 4 8 20" opacity=".3"/>`,marquise:`<path d="M12 3 C17 8 17 16 12 21 C7 16 7 8 12 3Z"/><path d="M12 3v18" opacity=".35"/>`};
+const icon=(p,c="ic")=>`<svg class="${c}" viewBox="0 0 24 24">${p}</svg>`;
+const use=(id,c="ic")=>`<svg class="${c}"><use href="#i-${id}"/></svg>`;
+const shapeSVG=sh=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".7">${SHAPEPATH[sh]}</svg>`;
+function prongSVG(k){
+  const p={classic:[[8,9],[16,9],[8,16],[16,16]],petite:[[9,10],[15,10],[9,15],[15,15]],knife:[[12,6],[18,12],[12,18],[6,12]],claw:[[7,8],[17,8],[7,17],[17,17]]}[k];
+  return `<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12.5" r="5.5"/>${p.map(([x,y])=>k==="claw"?`<path d="M${x} ${y} l${x<12?2:-2} ${y<12?2:-2}" stroke-width="1.6"/>`:`<circle cx="${x}" cy="${y}" r="${k==="petite"?.9:1.3}" fill="currentColor"/>`).join("")}</svg>`;
+}
+
+/* ---------- helpers ---------- */
+const $=id=>document.getElementById(id);
+const money=n=>"$"+Math.round(n).toLocaleString("en-US");
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+const ST=id=>STYLES.find(s=>s.id===id),SET=id=>SETTINGS.find(s=>s.id===id),BD=id=>BANDS.find(b=>b.id===id),DM=id=>DIAMONDS.find(d=>d.id===id);
+const img=s=>`assets/cut/${s.style||s}.png`;
+const mk=c=>c.metal==="p"?1.55:c.kt==="18"?1.22:1;
+const metalName=(c=S)=>c.metal==="p"?"Platinum":`${c.kt}K ${METALS.find(m=>m[0]===c.metal)[1].replace(" gold"," Gold")}`;
+const sPrice=(s,c=S)=>Math.round((s.base*mk(c)+BD(c.band).add+WIDTHS.find(w=>w[0]===c.width)[1]+PRONGS.find(p=>p[0]===c.prong)[2])/10)*10;
+const fromPrice=s=>Math.round(s.base*mk(S)/10)*10;
+const total=(c=S)=>c.setting?sPrice(SET(c.setting),c)+(c.diamond?DM(c.diamond).price:0):0;
+const fam=(c=S)=>c.metal==="w"?"":c.metal;
+const dDesc=d=>`${d.ct.toFixed(2)} ct ${cap(d.shape)}`;
+function toast(t){const el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2400)}
+
+/* ---------- state ---------- */
+const S={setting:null,metal:"w",kt:"14",band:"comfort",width:"2.0",prong:"classic",size:7,engr:"",diamond:null,
+  step:1,spin:false,pop:null,modal:null,
+  fStyle:null,fPrice:"any",sort:"featured",shown:12,
+  dLab:true,dShape:"round",cMin:.7,cMax:3.4,clar:[],col:[],cut:[],dMax:60000,dSort:"price",dShown:12,
+  saved:[]};
+const CFG=["setting","metal","kt","band","width","prong","size","engr","diamond"];
+const snap=()=>Object.fromEntries(CFG.map(k=>[k,S[k]]));
+const sameCfg=(a,b)=>CFG.every(k=>a[k]===b[k]);
+const savedIdx=()=>S.saved.findIndex(c=>sameCfg(c,snap()));
+
+/* ---------- intro ---------- */
+function renderIntro(){
+  $("trend").innerHTML=TRENDING.map(SET).map(s=>`<button class="tr" data-pick="${s.id}" data-top-after><span class="im"><img src="${img(s)}" alt=""></span><b>The ${s.name}</b><small>${ST(s.style).name} · from ${money(fromPrice(s))}</small><span class="go">Start with this ring →</span></button>`).join("");
+}
+
+/* ---------- hero ---------- */
+let lastSrc="";
+function renderHero(){
+  if(!S.setting)return;
+  const s=SET(S.setting),d=S.diamond&&DM(S.diamond),src=img(s),r=$("ring");
+  const put=()=>{r.className="ring "+fam();r.innerHTML=`<img src="${src}" alt="The ${s.name}, ${ST(s.style).name} setting in ${metalName()}">`};
+  if(lastSrc&&lastSrc!==src){r.classList.add("swap");setTimeout(put,220)}else put();lastSrc=src;
+  $("hWord").textContent=ST(s.style).name;
+  $("stage").classList.toggle("spinning",S.spin);
+  const si=savedIdx();
+  $("htxt").innerHTML=`<div class="eb">Your ring · No. ${s.no}</div><h1><em>The</em> ${s.name}</h1>
+    <div class="spec">${ST(s.style).name} · ${metalName()}${d?`<br>${dDesc(d)} · ${d.col} ${d.clar}`:""}</div>
+    <div class="price num">${money(total())}<small>${d?"Setting and diamond":"Setting only"}</small></div>
+    <div class="hact"><button class="ibtn" data-save aria-pressed="${si>-1}">${use("heart")}${si>-1?"Saved":"Save"}</button><button class="ibtn" data-spin aria-pressed="${S.spin}">${use("spin")}360°</button><button class="ibtn" data-details>${use("info")}Details</button></div>`;
+  $("vstep").innerHTML=stepsHTML();
+  renderBar();
+}
+function renderBar(){
+  const s=SET(S.setting),d=S.diamond&&DM(S.diamond);let h="";
+  if(S.step===1){
+    h=`<div class="g"><span class="k">Style</span><div class="v"><button class="drop" data-pop="style">${icon(SICON[s.style])}${ST(s.style).name}${use("chev")}</button></div>
+        <div class="pop grid2${S.pop==="style"?" on":""}">${STYLES.map(x=>`<button data-swap="${x.id}" aria-pressed="${x.id===s.style}">${icon(SICON[x.id])}${x.name}</button>`).join("")}</div></div>
+      <div class="g"><span class="k">Metal</span><div class="v">${METALS.map(([id,n,g])=>`<button class="sw" data-metal="${id}" aria-pressed="${S.metal===id}" aria-label="${n}" title="${n}" style="background:${g}"></button>`).join("")}</div></div>
+      <div class="g"><span class="k">Purity</span><div class="v">${["14","18"].map(k=>`<button class="chip" data-kt="${k}" aria-pressed="${S.metal!=="p"&&S.kt===k}" ${S.metal==="p"?"disabled":""}>${k}K</button>`).join("")}</div></div>
+      <div class="g"><span class="k">Band width</span><div class="v step-n"><button data-w="-1" aria-label="Narrower">−</button><output class="num">${S.width} mm</output><button data-w="1" aria-label="Wider">+</button></div></div>
+      <div class="g"><span class="k">Budget</span><div class="v"><button class="drop" data-pop="price">${PRICEB.find(p=>p[0]===S.fPrice)[1]}${use("chev")}</button></div>
+        <div class="pop${S.pop==="price"?" on":""}">${PRICEB.map(([id,t])=>`<button data-fprice="${id}" aria-pressed="${S.fPrice===id}">${t}<small>${setList(id).length}</small></button>`).join("")}</div></div>
+      <div class="g"><div class="v"><button class="filters-btn" data-modal="filters">${use("sliders")}More options</button></div></div>`;
+  }else{
+    h=`<div class="g"><span class="k">Diamond</span><div class="v">${[[true,"Lab grown"],[false,"Natural"]].map(([v,t])=>`<button class="chip" data-lab="${v}" aria-pressed="${S.dLab===v}">${t}</button>`).join("")}</div></div>
+      <div class="g"><span class="k">Shape · ${cap(S.dShape)}</span><div class="v shp">${SHAPES.map(sh=>`<button data-shape="${sh}" aria-pressed="${S.dShape===sh}" aria-label="${cap(sh)}" title="${cap(sh)}">${shapeSVG(sh).replace("<svg",'<svg width="22" height="22"')}</button>`).join("")}</div></div>
+      <div class="g"><span class="k">Minimum carat</span><div class="v step-n"><button data-ct="-1" aria-label="Less">−</button><output class="num">${S.cMin.toFixed(2)} ct</output><button data-ct="1" aria-label="More">+</button></div></div>
+      <div class="g"><div class="v"><button class="filters-btn" data-modal="filters">${use("sliders")}Filters${dFilterCount()?`<b>${dFilterCount()}</b>`:""}</button></div></div>`;
+  }
+  const next=S.step===1?`<button class="btn gold" data-step="2">Choose diamond${use("arrow")}</button>`
+    :S.step===2?`<button class="btn gold" data-step="3" ${d?"":"disabled"} title="${d?"":"Pick a diamond below"}">Review${use("arrow")}</button>`
+    :`<button class="btn gold" data-info="Adds the ring to the order">Place order</button>`;
+  $("bar").innerHTML=`<div class="gs">${h}</div><div class="end"><div class="tot"><span class="k">Total</span><b class="num">${money(total())}</b></div>${next}</div>`;
+}
+
+/* ---------- mini ---------- */
+function renderMini(){
+  if(!S.setting){$("mini").innerHTML="";return}
+  const s=SET(S.setting),d=S.diamond&&DM(S.diamond),si=savedIdx();
+  $("mini").innerHTML=`<button class="th ${fam()}" data-top aria-label="Back to your ring"><img src="${img(s)}" alt=""></button>
+    <span class="tx"><b>The ${s.name}</b><small class="num">${money(total())} · ${metalName()}${d?" · "+dDesc(d):""}</small></span>
+    <span class="sep"></span>
+    <button class="ibtn" data-save aria-pressed="${si>-1}" aria-label="${si>-1?"Saved":"Save to compare"}">${use("heart")}${si>-1?"Saved":"Save"}</button>
+    <span class="sep"></span>
+    <span class="slots" aria-label="Saved rings">${Array.from({length:5},(_,i)=>{const c=S.saved[i];return c?`<span class="sw-slot"><button class="slot full ${fam(c)}${i===si?" cur":""}" data-load="${i}" title="The ${SET(c.setting).name} · ${money(total(c))}"><img src="${img(SET(c.setting))}" alt=""></button><button class="rm" data-unsave="${i}" aria-label="Remove the ${SET(c.setting).name}">${use("x")}</button></span>`:`<span class="slot"></span>`}).join("")}</span>
+    <button class="btn line sm" data-compare ${S.saved.length?"":"disabled"}>${use("cmp")}Compare</button>
+    <button class="x" data-top aria-label="Back to top">${use("up")}</button>`;
+}
+
+/* ---------- listing ---------- */
+const stepsHTML=()=>["Setting","Diamond","Review"].map((t,i)=>`<button data-step="${i+1}" aria-current="${S.step===i+1}" class="${i+1<S.step?"done":""}" ${(i===1&&!S.setting)||(i===2&&!S.diamond)?"disabled":""}><span class="dot">${i+1<S.step?use("check"):i+1}</span>${t}</button>`).join("");
+function setList(price=S.fPrice){
+  const [, ,lo,hi]=PRICEB.find(p=>p[0]===price);
+  let l=SETTINGS.filter(s=>(!S.fStyle||s.style===S.fStyle)&&fromPrice(s)>=lo&&fromPrice(s)<hi);
+  if(S.sort==="low")l=[...l].sort((a,b)=>a.base-b.base);
+  if(S.sort==="high")l=[...l].sort((a,b)=>b.base-a.base);
+  return l;
+}
+function dList(){
+  const l=DIAMONDS.filter(d=>d.lab===S.dLab&&d.shape===S.dShape&&d.ct>=S.cMin&&d.ct<=S.cMax&&(!S.clar.length||S.clar.includes(d.clar))&&(!S.col.length||S.col.includes(d.col))&&(!S.cut.length||S.cut.includes(d.cut))&&d.price<=S.dMax);
+  return l.sort(S.dSort==="carat"?(a,b)=>b.ct-a.ct:(a,b)=>a.price-b.price);
+}
+const dFilterCount=()=>(S.clar.length?1:0)+(S.col.length?1:0)+(S.cut.length?1:0)+(S.dMax<60000?1:0)+(S.cMax<3.4?1:0);
+function renderBuild(){
+  const st=S.step;
+  $("hstep").innerHTML=stepsHTML();
+  const T={1:["Choose your setting",S.setting?"Every setting below can take your metal and band choices.":"Start with the shape of the ring, then make it yours."],
+           2:["Choose your diamond","Select your diamond type and shape, then explore available options."],
+           3:["Review your ring","Everything you chose, in one place."]}[st];
+  $("bT").textContent=T[0];$("bS").textContent=T[1];
+  if(st===1){
+    const l=setList();
+    $("bBody").innerHTML=`<div class="tools"><div class="qs" role="group" aria-label="Style"><button data-fstyle="" aria-pressed="${!S.fStyle}">All styles</button>${STYLES.map(x=>`<button data-fstyle="${x.id}" aria-pressed="${S.fStyle===x.id}">${icon(SICON[x.id])}${x.name}</button>`).join("")}</div>
+       <span class="cnt">${l.length} settings</span><select class="sort" id="sort" aria-label="Sort">${[["featured","Featured"],["low","Price: low to high"],["high","Price: high to low"]].map(([v,t])=>`<option value="${v}" ${S.sort===v?"selected":""}>${t}</option>`).join("")}</select>
+       <button class="filters-btn" data-modal="filters">${use("sliders")}Filters</button></div>
+     <div class="grid">${l.length?l.slice(0,S.shown).map(s=>{const sel=S.setting===s.id,fav=S.saved.some(c=>c.setting===s.id);
+        return `<article class="card${sel?" sel":""}"><div class="tile ${fam()}"><img src="${img(s)}" alt="" loading="lazy"></div>
+          <button class="pick" data-pick="${s.id}" aria-label="Choose the ${s.name}"></button>
+          ${sel?`<span class="badge">${use("check")}Your setting</span>`:""}
+          <button class="heart" data-fav="${s.id}" aria-pressed="${fav}" aria-label="Save the ${s.name}">${use("heart")}</button>
+          <div class="meta"><span><b>The ${s.name}</b><small>${ST(s.style).name} · ${s.tweak}</small></span><span class="pr num">${money(fromPrice(s))}<small>Setting from</small></span></div></article>`}).join("")
+       :`<p class="empty">No settings in this range. Try another budget.</p>`}</div>
+     ${l.length>S.shown?`<div class="more"><button class="btn line" data-more>Show more · ${l.length-S.shown} remaining</button></div>`:""}`;
+    $("sort").onchange=e=>{S.sort=e.target.value;renderBuild()};
+  }else if(st===2){
+    const l=dList();
+    $("bBody").innerHTML=`<div class="tools"><div class="qs" role="group" aria-label="Shape">${SHAPES.map(sh=>`<button data-shape="${sh}" aria-pressed="${S.dShape===sh}">${shapeSVG(sh).replace("<svg",'<svg class="ic"')}${cap(sh)}</button>`).join("")}</div>
+       <span class="cnt">${l.length} ${S.dLab?"lab-grown":"natural"} diamonds</span><select class="sort" id="dsort" aria-label="Sort">${[["price","Price: low to high"],["carat","Carat: high to low"]].map(([v,t])=>`<option value="${v}" ${S.dSort===v?"selected":""}>${t}</option>`).join("")}</select>
+       <button class="filters-btn" data-modal="filters">${use("sliders")}Filters${dFilterCount()?`<b>${dFilterCount()}</b>`:""}</button></div>
+     <div class="grid">${l.length?l.slice(0,S.dShown).map(d=>{const sel=S.diamond===d.id;
+        return `<article class="card${sel?" sel":""}"><div class="tile dtile"><span class="spark"></span>${shapeSVG(d.shape)}</div>
+          <button class="pick" data-dia="${d.id}" aria-label="Choose ${dDesc(d)}"></button>
+          ${sel?`<span class="badge">${use("check")}Your diamond</span>`:""}
+          <div class="meta"><span><b>${dDesc(d)}</b><small>${d.lab?"Lab grown":"Natural"} · ${d.cert} certified</small></span><span class="pr num">${money(d.price)}</span></div>
+          <div class="dfacts"><span>Color ${d.col}</span><span>Clarity ${d.clar}</span><span>${d.cut}</span></div></article>`}).join("")
+       :`<p class="empty">No ${S.dLab?"lab-grown":"natural"} ${S.dShape} diamonds match. Lower the carat or open Filters.</p>`}</div>
+     ${l.length>S.dShown?`<div class="more"><button class="btn line" data-dmore>Show more · ${l.length-S.dShown} remaining</button></div>`:""}`;
+    $("dsort").onchange=e=>{S.dSort=e.target.value;renderBuild()};
+  }else{
+    const s=SET(S.setting),d=DM(S.diamond);
+    $("bBody").innerHTML=`<div class="review"><div class="rimg ${fam()}"><img src="${img(s)}" alt="The ${s.name}"></div>
+      <div><dl class="sp"><dt>Setting</dt><dd>The ${s.name} · ${ST(s.style).name}</dd><dt>Metal</dt><dd>${metalName()}</dd><dt>Band</dt><dd>${BD(S.band).name} · ${S.width} mm</dd><dt>Prongs</dt><dd>${PRONGS.find(p=>p[0]===S.prong)[1]}</dd><dt>Ring size</dt><dd>${S.size}</dd>${S.engr?`<dt>Engraving</dt><dd class="serif" style="font-style:italic;font-size:18px">“${S.engr.replace(/</g,"&lt;")}”</dd>`:""}
+        <dt>Diamond</dt><dd>${dDesc(d)} · ${d.col} ${d.clar} · ${d.cut}<br><small style="color:var(--soft)">${d.lab?"Lab grown":"Natural"} · ${d.cert} certified</small></dd></dl>
+      <div class="totals"><div><span style="color:var(--soft)">Setting</span><span class="num">${money(sPrice(s))}</span></div><div><span style="color:var(--soft)">Diamond</span><span class="num">${money(d.price)}</span></div><div class="big"><span>Total</span><span class="num">${money(total())}</span></div></div>
+      <div class="hact" style="display:flex;margin-top:22px"><button class="btn gold" data-info="Adds the ring to the order">Place order</button><button class="btn line" data-save>${savedIdx()>-1?"Saved to compare":"Save to compare"}</button><button class="btn line" data-info="Opens the existing Drop a Hint form">Drop a hint</button></div>
+      <p class="note">Free insured shipping · made to order in 7 – 10 days · diamond value guarantee</p></div></div>`;
+  }
+}
+
+/* ---------- modals ---------- */
+function openModal(m){S.modal=m;renderModal();$("scrim").classList.add("on");document.body.style.overflow="hidden"}
+function closeModal(){S.modal=null;$("scrim").classList.remove("on");document.body.style.overflow=""}
+function renderModal(){
+  const sh=$("sheet");sh.className="sheet"+(S.modal==="compare"?" wide":"");
+  if(S.modal==="filters"&&S.step===1){
+    const n=setList().length;
+    sh.innerHTML=`<header><div><h3>More options</h3><small>Narrow the list, or fine-tune your ring.</small></div><button class="x" data-close aria-label="Close">${use("x")}</button></header>
+     <div class="body">
+      <p class="grp-t">Narrow the list</p>
+      <div class="fs"><h4>Style</h4><div class="opts">${STYLES.map(x=>`<button class="opt tall" data-fstyle="${x.id}" aria-pressed="${S.fStyle===x.id}">${icon(SICON[x.id])}${x.name}</button>`).join("")}</div></div>
+      <div class="fs"><h4>Budget for the setting</h4><div class="opts">${PRICEB.map(([id,t])=>`<button class="opt" data-fprice="${id}" aria-pressed="${S.fPrice===id}">${t}</button>`).join("")}</div></div>
+      <p class="grp-t">Fine-tune your ring</p>
+      <div class="fs"><h4>Metal</h4><div class="opts">${METALS.map(([id,t,g])=>`<button class="opt" data-metal="${id}" aria-pressed="${S.metal===id}"><span class="sw" style="background:${g};width:18px;height:18px"></span>${t}</button>`).join("")}${["14","18"].map(k=>`<button class="opt" data-kt="${k}" aria-pressed="${S.metal!=="p"&&S.kt===k}" ${S.metal==="p"?"disabled":""}>${k}K</button>`).join("")}</div></div>
+      <div class="fs"><h4>Band</h4><div class="opts">${BANDS.map(b=>`<button class="opt" data-band="${b.id}" aria-pressed="${S.band===b.id}">${b.name}<small>${b.add?"+"+money(b.add):"Included"}</small></button>`).join("")}</div></div>
+      <div class="fs"><h4>Band width</h4><div class="opts">${WIDTHS.map(([w,a])=>`<button class="opt" data-width="${w}" aria-pressed="${S.width===w}">${w} mm${a>0?`<small>+${money(a)}</small>`:""}</button>`).join("")}</div></div>
+      <div class="fs"><h4>Prong style</h4><div class="opts">${PRONGS.map(([k,t,a])=>`<button class="opt tall" data-prong="${k}" aria-pressed="${S.prong===k}">${prongSVG(k)}${t}</button>`).join("")}</div></div>
+      <div class="fs"><h4>Ring size <button class="link" data-info="Opens the existing ring size guide">Size guide</button></h4><select class="field" id="size" aria-label="Ring size">${Array.from({length:29},(_,i)=>3+i*.25).map(v=>`<option value="${v}" ${S.size===v?"selected":""}>${v}</option>`).join("")}</select></div>
+      <div class="fs"><h4>Engraving <small>Optional</small></h4><div class="engr"><input class="field" id="engr" maxlength="30" placeholder="Forever yours" value="${S.engr.replace(/"/g,"&quot;")}" aria-label="Engraving"><small id="engrN">${S.engr.length}/30</small></div></div>
+     </div>
+     <footer><button class="btn line sm" data-clear>Clear filters</button><button class="btn gold" data-close>Show ${n} settings</button></footer>`;
+    $("size").onchange=e=>{S.size=+e.target.value;refresh()};
+    $("engr").oninput=e=>{S.engr=e.target.value;$("engrN").textContent=S.engr.length+"/30";renderHero();renderMini()};
+  }else if(S.modal==="filters"){
+    sh.innerHTML=`<header><div><h3>Diamond filters</h3><small>Every diamond is graded and certified.</small></div><button class="x" data-close aria-label="Close">${use("x")}</button></header>
+     <div class="body">
+      <div class="fs"><h4>Diamond type</h4><div class="opts">${[[true,"Lab grown","Same beauty, a more sustainable choice"],[false,"Natural","Formed in the earth over millions of years"]].map(([v,t,dd])=>`<button class="opt" data-lab="${v}" aria-pressed="${S.dLab===v}" style="flex-direction:column;align-items:flex-start;padding:12px 16px;width:min(300px,100%)">${t}<small>${dd}</small></button>`).join("")}</div></div>
+      <div class="fs"><h4>Shape</h4><div class="opts">${SHAPES.map(sh=>`<button class="opt tall" data-shape="${sh}" aria-pressed="${S.dShape===sh}">${shapeSVG(sh).replace("<svg",'<svg class="ic"')}${cap(sh)}</button>`).join("")}</div></div>
+      <div class="fs"><h4>Carat <small>${S.cMin.toFixed(2)} – ${S.cMax.toFixed(2)} ct</small></h4><div class="rng"><input type="range" id="cMin" min=".5" max="3.4" step=".05" value="${S.cMin}" aria-label="Minimum carat"><input type="range" id="cMax" min=".5" max="3.4" step=".05" value="${S.cMax}" aria-label="Maximum carat"></div></div>
+      <div class="fs"><h4>Color <small>D is the most colorless</small></h4><div class="opts">${COLS.map(c=>`<button class="opt" data-col="${c}" aria-pressed="${S.col.includes(c)}">${c}</button>`).join("")}</div></div>
+      <div class="fs"><h4>Clarity <small>FL is flawless</small></h4><div class="opts">${CLAR.map(c=>`<button class="opt" data-clar="${c}" aria-pressed="${S.clar.includes(c)}">${c}</button>`).join("")}</div></div>
+      <div class="fs"><h4>Cut</h4><div class="opts">${CUTS.map(c=>`<button class="opt" data-cut="${c}" aria-pressed="${S.cut.includes(c)}">${c}</button>`).join("")}</div></div>
+      <div class="fs"><h4>Diamond budget</h4><div class="rng"><input type="range" id="dMax" min="1000" max="60000" step="500" value="${S.dMax}" aria-label="Maximum price"><output id="dMaxO" class="num">${S.dMax>=60000?"Any":"Up to "+money(S.dMax)}</output></div></div>
+     </div>
+     <footer><button class="btn line sm" data-clear>Clear filters</button><button class="btn gold" data-close>Show ${dList().length} diamonds</button></footer>`;
+    const rr=()=>{renderModal();renderBar();renderBuild()};
+    $("cMin").oninput=e=>{S.cMin=Math.min(+e.target.value,S.cMax);S.dShown=12;rr()};
+    $("cMax").oninput=e=>{S.cMax=Math.max(+e.target.value,S.cMin);S.dShown=12;rr()};
+    $("dMax").oninput=e=>{S.dMax=+e.target.value;S.dShown=12;rr()};
+  }else if(S.modal==="compare"){
+    const c=S.saved,low=c.length?Math.min(...c.map(total)):0;
+    sh.innerHTML=`<header><div><h3>Compare your rings</h3><small>${c.length} of 5 saved. Open one to keep working on it.</small></div><button class="x" data-close aria-label="Close">${use("x")}</button></header>
+     <div class="body">${c.length?`<div class="cmp" style="grid-template-columns:repeat(${c.length},minmax(190px,1fr))">${c.map((x,i)=>{const s=SET(x.setting),d=x.diamond&&DM(x.diamond);
+       return `<div class="col"><div class="ci ${fam(x)}"><img src="${img(s)}" alt=""></div><div class="cn">The ${s.name}</div><small style="color:var(--soft);margin-bottom:10px">${ST(s.style).name}</small>
+         <div class="row"><span>Metal</span>${metalName(x)}</div><div class="row"><span>Band</span>${BD(x.band).name} · ${x.width} mm</div><div class="row"><span>Prongs</span>${PRONGS.find(p=>p[0]===x.prong)[1]}</div>
+         <div class="row"><span>Diamond</span>${d?`${dDesc(d)} · ${d.col} ${d.clar}`:"Not chosen"}</div><div class="row"><span>Origin</span>${d?(d.lab?"Lab grown":"Natural"):"—"}</div>
+         <div class="row num${total(x)===low&&c.length>1?" best":""}"><span>Total${total(x)===low&&c.length>1?" · lowest":""}</span>${money(total(x))}</div>
+         <div class="acts"><button class="btn gold sm" data-load="${i}">Open</button><button class="btn line sm" data-unsave="${i}">Remove</button></div></div>`}).join("")}</div>`
+       :`<p class="empty">Nothing saved yet. Tap the heart on any ring to keep it here, up to five.</p>`}</div>`;
+  }else if(S.modal==="details"){
+    const s=SET(S.setting),d=S.diamond&&DM(S.diamond);
+    sh.innerHTML=`<header><div><h3>The ${s.name}</h3><small>${ST(s.style).name} · No. ${s.no}</small></div><button class="x" data-close aria-label="Close">${use("x")}</button></header>
+     <div class="body"><div class="review" style="margin-top:14px"><div class="rimg ${fam()}"><img src="${img(s)}" alt=""></div><div>
+      <p style="margin:0 0 20px;color:var(--soft)">A ${ST(s.style).name.toLowerCase()} setting in ${metalName().toLowerCase()} on a ${BD(S.band).name.toLowerCase()} band${d?`, holding a ${d.ct.toFixed(2)} carat ${d.lab?"lab grown":"natural"} ${d.shape} diamond`:""}. Made to order by Overnight.</p>
+      <dl class="sp"><dt>Metal</dt><dd>${metalName()}</dd><dt>Rhodium plated</dt><dd>${S.metal==="w"?"Yes":"No"}</dd><dt>Band</dt><dd>${BD(S.band).name} · ${S.width} mm</dd><dt>Prongs</dt><dd>${PRONGS.find(p=>p[0]===S.prong)[1]}</dd><dt>Ring size</dt><dd>${S.size} · resizable 3 – 10</dd><dt>Setting</dt><dd class="num">${money(sPrice(s))}</dd>${d?`<dt>Diamond</dt><dd>${dDesc(d)} · ${d.col} ${d.clar} · ${d.cert} <button class="link" data-info="Opens the ${d.cert} certificate">Certificate</button></dd><dt>Diamond price</dt><dd class="num">${money(d.price)}</dd>`:""}</dl>
+      <div class="totals"><div class="big"><span>Total</span><span class="num">${money(total())}</span></div></div></div></div></div>`;
+  }
+}
+
+/* ---------- orchestration ---------- */
+function refresh(){
+  document.body.classList.toggle("has-ring",!!S.setting);
+  $("savedN").textContent=S.saved.length;
+  renderHero();renderMini();renderBuild();if(S.modal)renderModal();
+}
+function goStep(n){
+  if(n>=2&&!S.setting)return;if(n===3&&!S.diamond)return;
+  S.step=n;S.pop=null;refresh();
+  $("build").scrollIntoView({behavior:"smooth"});
+}
+function toggleSave(){
+  const i=savedIdx();
+  if(i>-1){S.saved.splice(i,1);toast("Removed from your saved rings")}
+  else if(S.saved.length>=5)toast("You can save up to five rings. Remove one to add another.");
+  else{S.saved.push(snap());toast(`Saved · ${S.saved.length} of 5 to compare`)}
+  refresh();
+}
+
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button,a");
+  if(!b){if(S.pop&&!e.target.closest(".pop")){S.pop=null;renderBar()}return}
+  const d=b.dataset;
+  /* returns to the page the shopper came from (the store's listing) */
+  if(b.id==="back"){history.back();return}
+  if(d.close!==undefined){closeModal();return}
+  if(d.top!==undefined){e.preventDefault();window.scrollTo({top:0,behavior:"smooth"});return}
+  if(d.jump){e.preventDefault();if(+d.jump===1||S.setting)goStep(Math.min(+d.jump,S.diamond?3:S.setting?2:1));return}
+  if(d.info){toast(d.info);return}
+  if(d.pop){S.pop=S.pop===d.pop?null:d.pop;renderBar();return}
+  if(d.pick){
+    const first=!S.setting;S.setting=d.pick;S.pop=null;if(first||d.topAfter!==undefined){S.fStyle=SET(d.pick).style;S.shown=12}
+    if(d.topAfter!==undefined||first){S.step=1;refresh();window.scrollTo({top:0,behavior:first?"auto":"smooth"});return}
+    refresh();toast(`The ${SET(d.pick).name} is now your setting`);return}
+  if(d.swap){const cur=SET(S.setting);const idx=+cur.id.split("-").pop();S.setting=`${d.swap}-${idx}`;S.fStyle=d.swap;S.shown=12;S.pop=null;refresh();return}
+  if(d.fav){
+    const had=S.saved.findIndex(c=>c.setting===d.fav);
+    if(had>-1){S.saved.splice(had,1);toast("Removed from your saved rings")}
+    else if(S.saved.length>=5)toast("You can save up to five rings. Remove one to add another.");
+    else{S.saved.push({...snap(),setting:d.fav,diamond:null});toast(`Saved · ${S.saved.length} of 5 to compare`)}
+    refresh();return}
+  if(d.save!==undefined){toggleSave();return}
+  if(d.compare!==undefined){openModal("compare");return}
+  if(d.details!==undefined){openModal("details");return}
+  if(d.modal){S.pop=null;renderBar();openModal(d.modal);return}
+  if(d.load!==undefined){Object.assign(S,S.saved[+d.load]);S.step=S.diamond?3:1;closeModal();refresh();window.scrollTo({top:0,behavior:"smooth"});return}
+  if(d.unsave!==undefined){S.saved.splice(+d.unsave,1);refresh();return}
+  if(d.spin!==undefined){S.spin=!S.spin;renderHero();return}
+  if(d.step){goStep(+d.step);return}
+  if(d.more!==undefined){S.shown+=12;renderBuild();return}
+  if(d.dmore!==undefined){S.dShown+=12;renderBuild();return}
+  if(d.clear!==undefined){if(S.step===1){S.fStyle=null;S.fPrice="any"}else{S.clar=[];S.col=[];S.cut=[];S.dMax=60000;S.cMin=.7;S.cMax=3.4}refresh();renderBar();return}
+  if(d.fstyle!==undefined){S.fStyle=d.fstyle===""||S.fStyle===d.fstyle&&b.closest(".sheet")?null:d.fstyle;S.shown=12;refresh();return}
+  if(d.fprice){S.fPrice=d.fprice;S.pop=null;S.shown=12;refresh();return}
+  if(d.metal){S.metal=d.metal;refresh();return}
+  if(d.kt){S.kt=d.kt;refresh();return}
+  if(d.band){S.band=d.band;refresh();return}
+  if(d.width){S.width=d.width;refresh();return}
+  if(d.w){const i=WIDTHS.findIndex(w=>w[0]===S.width)+ +d.w;if(WIDTHS[i]){S.width=WIDTHS[i][0];refresh()}return}
+  if(d.prong){S.prong=d.prong;refresh();return}
+  if(d.lab){S.dLab=d.lab==="true";S.dShown=12;refresh();return}
+  if(d.shape){S.dShape=d.shape;S.dShown=12;refresh();return}
+  if(d.ct){S.cMin=Math.round(Math.min(S.cMax,Math.max(.5,S.cMin+ +d.ct*.1))*100)/100;S.dShown=12;refresh();return}
+  if(d.clar||d.col||d.cut){const k=d.clar?"clar":d.col?"col":"cut",v=d[k];S[k]=S[k].includes(v)?S[k].filter(x=>x!==v):[...S[k],v];S.dShown=12;refresh();return}
+  if(d.dia){S.diamond=d.dia;refresh();toast(`${dDesc(DM(d.dia))} added to your ring`);return}
+});
+$("scrim").addEventListener("click",e=>{if(e.target.id==="scrim")closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(S.modal)closeModal();else if(S.pop){S.pop=null;renderBar()}}});
+
+/* scroll: the hero ring shrinks away, then docks as the floating unit */
+function onScroll(){
+  const y=window.scrollY,h=$("hero").offsetHeight||1;
+  const p=Math.min(1,Math.max(0,y/h));
+  $("hero").style.setProperty("--p",p.toFixed(3));
+  document.body.classList.toggle("scrolled",y>20);
+  document.body.classList.toggle("mini-on",!!S.setting&&y>h*.62);
+  /* the hero stepper holds still and grows while the bar fades, then hands over to the listing's stepper in the same spot */
+  if(S.setting){
+    const vs=$("vstep"),hero=$("hero"),dock=vs.parentElement,b=$("build");
+    const from=hero.offsetTop+dock.offsetTop+vs.offsetTop,to=b.offsetTop+$("hstep").offsetTop,D=Math.max(1,to-from);
+    const t=Math.min(1,Math.max(0,y/D));
+    vs.style.transform=`translateY(${(t*D).toFixed(1)}px) scale(${(.8+.2*t).toFixed(3)})`;
+    hero.style.setProperty("--t",t.toFixed(3));hero.style.setProperty("--D",D+"px");
+    document.body.classList.toggle("hero-steps",t<1);
+    document.body.classList.toggle("bar-gone",t>.6);
+  }else document.body.classList.remove("hero-steps","bar-gone");
+}
+addEventListener("scroll",onScroll,{passive:true});addEventListener("resize",onScroll);
+
+renderIntro();refresh();onScroll();
+</script>
+</body>
+</html>
