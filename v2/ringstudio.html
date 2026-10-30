@@ -61,7 +61,7 @@ img{display:block;max-width:100%}
   background:linear-gradient(180deg,rgba(255,255,255,.17),rgba(255,255,255,.02) 78%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .stage{position:absolute;inset:0;display:grid;place-items:center;padding-bottom:170px;perspective:1200px}
 .stage .glow{position:absolute;width:min(70vh,720px);aspect-ratio:1;border-radius:50%;background:radial-gradient(closest-side,rgba(255,250,240,.11),rgba(255,250,240,.03) 55%,transparent);top:50%;left:50%;transform:translate(-50%,-56%)}
-.ring{position:relative;width:min(56vh,600px);transition:opacity .25s}
+.ring{position:relative;width:min(56vh,600px);transform:translateY(calc(var(--p)*10vh)) scale(calc(1 - var(--p)*.16));transition:opacity .25s}
 .ring img{width:100%;filter:drop-shadow(0 30px 40px rgba(0,0,0,.6));animation:float 7s ease-in-out infinite}
 .ring.y img{filter:sepia(.55) saturate(1.8) hue-rotate(-8deg) brightness(1.03) drop-shadow(0 30px 40px rgba(0,0,0,.6))}
 .ring.r img{filter:sepia(.5) saturate(1.5) hue-rotate(-32deg) brightness(1.04) drop-shadow(0 30px 40px rgba(0,0,0,.6))}
@@ -69,7 +69,7 @@ img{display:block;max-width:100%}
 .stage.spinning .ring img{animation:spin 6s linear infinite}
 @keyframes float{50%{transform:translateY(-10px)}}
 @keyframes spin{from{transform:perspective(1100px) rotateY(0)}to{transform:perspective(1100px) rotateY(360deg)}}
-.htxt{position:absolute;left:clamp(16px,4vw,56px);top:calc(clamp(55px,8vh,75px) + 45px);max-width:320px;pointer-events:auto}
+.htxt{position:absolute;left:clamp(16px,4vw,56px);top:calc(clamp(55px,8vh,75px) + 45px);max-width:320px;pointer-events:auto;opacity:calc(1 - var(--p)*1.2)}
 .htxt .eb{font-size:12.5px;color:var(--soft);letter-spacing:.06em}
 .htxt h1{margin:8px 0 6px;font:400 clamp(40px,4.4vw,60px)/1 var(--serif)}
 .htxt h1 em{font-style:italic;color:var(--soft)}
@@ -175,6 +175,67 @@ dl.sp dd{margin:0}
 .totals .big{font-size:26px;font-weight:300}
 .toast{position:fixed;left:50%;bottom:clamp(110px,16vh,140px);transform:translateX(-50%);z-index:80;padding:11px 18px;border-radius:99px;background:#f3f0ea;color:#111;font-size:13.5px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
 
+/* scroll: the ring recedes, the controls fade and the stepper glides up to the listing */
+#hero .word{opacity:calc(1 - var(--p)*1.4);transform:translateY(calc(var(--p)*-40px))}
+#vstep{transform-origin:50% 0;will-change:transform}
+body:not(.hero-steps) #vstep{visibility:hidden}
+body.hero-steps #hstep{visibility:hidden}
+.bar{opacity:calc(1 - var(--t,0)*1.7);transform:translateY(calc(var(--t,0)*var(--D,0px))) scale(calc(1 - var(--t,0)*.04))}
+body.bar-gone .bar{visibility:hidden}
+
+/* floating mini unit: the ring stays with the shopper once they scroll past it */
+.mini{position:fixed;top:78px;left:50%;z-index:39;display:flex;align-items:center;gap:14px;padding:8px;border-radius:99px;border:1px solid var(--line);background:rgba(20,20,23,.86);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 18px 50px rgba(0,0,0,.45);transform:translate(-50%,-14px) scale(.96);opacity:0;pointer-events:none;transition:opacity .35s,transform .45s cubic-bezier(.2,.7,.2,1);max-width:calc(100vw - 24px)}
+body.mini-on .mini{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.mini .th{width:46px;height:46px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.1),transparent);display:grid;place-items:center;flex:none}
+.mini .th img{width:44px}
+.mini .tx{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.mini .tx b{font:500 18px/1.1 var(--serif);white-space:nowrap}
+.mini .tx small{color:var(--soft);font-size:12.5px;white-space:nowrap}
+.mini .sep{width:1px;align-self:stretch;margin:6px 0;background:var(--line)}
+.mini .ibtn{height:34px}
+.mini .x{width:34px;height:34px}
+
+/* listing */
+#build{position:relative;padding:72px clamp(16px,4vw,56px) 80px;max-width:1440px;margin:0 auto;scroll-margin-top:84px}
+body.has-ring #build{margin-top:-140px;padding-top:36px;scroll-margin-top:124px}
+.bhead{display:grid;grid-template-columns:1fr auto 1fr;align-items:start}
+.btitle{text-align:center;margin:34px 0 0}
+.btitle h2{margin:0;font:400 clamp(34px,3.6vw,48px)/1.1 var(--serif)}
+.btitle p{margin:8px 0 0;color:var(--soft)}
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:16px 12px;margin:40px 0 26px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.qs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1 0 100%;min-width:0;padding:2px}
+.qs::-webkit-scrollbar{display:none}
+.qs button{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:99px;border:1px solid transparent;font-size:13.5px;color:var(--soft);white-space:nowrap}
+.qs button:hover{color:var(--ink)}
+.qs button[aria-pressed="true"]{border-color:var(--line-2);color:var(--ink);background:rgba(255,255,255,.04)}
+.tools .cnt{color:var(--faint);font-size:13px;white-space:nowrap;margin-right:auto}
+.sort{height:36px;border-radius:99px;border:1px solid var(--line-2);padding:0 16px;font-size:13px;color:var(--soft);cursor:pointer;-webkit-appearance:none;appearance:none;background:transparent}
+.sort:hover{border-color:rgba(255,255,255,.4);color:var(--ink)}
+.sort option{background:#151517}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,1.6vw,22px)}
+.card{position:relative;display:flex;flex-direction:column;text-align:left}
+.card .tile{position:relative;aspect-ratio:1;border-radius:18px;background:radial-gradient(80% 70% at 50% 42%,#1d1d21,#121214 70%);border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;transition:border-color .3s}
+.card .tile img{width:82%;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.card:hover .tile{border-color:var(--line-2)}
+.card:hover .tile img{transform:scale(1.05)}
+.card.sel .tile{border-color:var(--gold)}
+.card .pick{position:absolute;inset:0;z-index:1;border-radius:18px}
+.card .heart{position:absolute;top:12px;right:12px;z-index:2;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--soft);background:rgba(0,0,0,.25)}
+.card .heart:hover{color:var(--ink)}
+.card .heart[aria-pressed="true"]{color:var(--gold)}
+.card .heart[aria-pressed="true"] .ic{fill:currentColor}
+.card .badge{position:absolute;top:12px;left:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:99px;background:var(--gold);color:var(--gold-ink);font-size:12px;font-weight:500}
+.card .badge .ic{width:13px;height:13px;stroke-width:2}
+.card .meta{padding:14px 4px 0;display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.card b{font:500 22px/1.15 var(--serif)}
+.card small{display:block;color:var(--soft);font-size:13px}
+.card .pr{font-size:15px;white-space:nowrap}
+.card .pr small{text-align:right;color:var(--faint);font-size:11.5px}
+.more{display:flex;justify-content:center;margin-top:36px}
+.empty{grid-column:1/-1;padding:60px 0;text-align:center;color:var(--soft)}
+@media (max-width:1100px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card b{font-size:18px}.card .meta{flex-direction:column;gap:2px}.card .pr small{text-align:left}}
+
 /* ---------- responsive ---------- */
 @media (max-width:1100px){
   .bar{overflow-x:auto;scrollbar-width:none}
@@ -205,6 +266,8 @@ dl.sp dd{margin:0}
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5m6-6-6 6 6 6"/></symbol>
   <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2.2l2.2 10.2a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.8L20.5 8H6.4"/><circle cx="9.5" cy="19.5" r="1.2"/><circle cx="17" cy="19.5" r="1.2"/></symbol>
@@ -230,7 +293,7 @@ dl.sp dd{margin:0}
     <div class="stage" id="stage"><div class="glow"></div><div class="ring" id="ring"></div></div>
     <div class="htxt" id="htxt"></div>
     <div class="dock">
-      <nav class="hstep" aria-label="Steps">
+      <nav class="hstep" id="vstep" aria-label="Steps">
         <button aria-current="true"><span class="dot">1</span>Setting</button>
         <button disabled><span class="dot">2</span>Diamond</button>
         <button disabled><span class="dot">3</span>Review</button>
@@ -238,7 +301,22 @@ dl.sp dd{margin:0}
       <div class="bar" id="bar"></div>
     </div>
   </section>
+  <!-- listing -->
+  <section id="build">
+    <div class="bhead">
+      <span></span>
+      <nav class="hstep" id="hstep" aria-label="Progress">
+        <button aria-current="true"><span class="dot">1</span>Setting</button>
+        <button disabled><span class="dot">2</span>Diamond</button>
+        <button disabled><span class="dot">3</span>Review</button>
+      </nav>
+      <span></span>
+    </div>
+    <div class="btitle"><h2 id="bT"></h2><p id="bS"></p></div>
+    <div id="bBody"></div>
+  </section>
 </main>
+<div class="mini" id="mini" aria-label="Your ring"></div>
 
 <div class="scrim" id="scrim"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
 <div class="toast" id="toast" hidden></div>
@@ -292,7 +370,7 @@ function prongSVG(k){
 
 /* ---------- state ---------- */
 const S={setting:"halo-0",metal:"w",kt:"14",band:"comfort",width:"2.0",prong:"classic",size:7,engr:"",
-  pop:null,modal:null,saved:[]};
+  pop:null,modal:null,saved:[],fStyle:null,fPrice:"any",sort:"featured",shown:12};
 const CFG=["setting","metal","kt","band","width","prong","size","engr"];
 const snap=()=>Object.fromEntries(CFG.map(k=>[k,S[k]]));
 const sameCfg=(a,b)=>CFG.every(k=>a[k]===b[k]);
@@ -331,8 +409,10 @@ function closeModal(){S.modal=null;$("scrim").classList.remove("on");document.bo
 function renderModal(){
   const sh=$("sheet");
   if(S.modal==="filters"){
-    sh.innerHTML=`<header><div><h3>More options</h3><small>Fine-tune your ring.</small></div><button class="x" data-close aria-label="Close">${use("x")}</button></header>
+    sh.innerHTML=`<header><div><h3>Filters</h3><small>Narrow the list, or fine-tune your ring.</small></div><button class="x" data-close aria-label="Close">${use("x")}</button></header>
      <div class="body">
+      <div class="fs"><h4>Style</h4><div class="opts">${STYLES.map(x=>`<button class="opt" data-fstyle="${x.id}" aria-pressed="${S.fStyle===x.id}">${x.name}</button>`).join("")}</div></div>
+      <div class="fs"><h4>Budget for the setting</h4><div class="opts">${PRICEB.map(([id,t])=>`<button class="opt" data-fprice="${id}" aria-pressed="${S.fPrice===id}">${t}</button>`).join("")}</div></div>
       <div class="fs"><h4>Metal</h4><div class="opts">${METALS.map(([id,t,g])=>`<button class="opt" data-metal="${id}" aria-pressed="${S.metal===id}"><span class="sw" style="background:${g};width:18px;height:18px"></span>${t}</button>`).join("")}${["14","18"].map(k=>`<button class="opt" data-kt="${k}" aria-pressed="${S.metal!=="p"&&S.kt===k}" ${S.metal==="p"?"disabled":""}>${k}K</button>`).join("")}</div></div>
       <div class="fs"><h4>Band</h4><div class="opts">${BANDS.map(b=>`<button class="opt" data-band="${b.id}" aria-pressed="${S.band===b.id}">${b.name}<small>${b.add?"+"+money(b.add):"Included"}</small></button>`).join("")}</div></div>
       <div class="fs"><h4>Band width</h4><div class="opts">${WIDTHS.map(([w,a])=>`<button class="opt" data-width="${w}" aria-pressed="${S.width===w}">${w} mm${a>0?`<small>+${money(a)}</small>`:""}</button>`).join("")}</div></div>
@@ -340,7 +420,7 @@ function renderModal(){
       <div class="fs"><h4>Ring size</h4><select class="field" id="size" aria-label="Ring size">${Array.from({length:29},(_,i)=>3+i*.25).map(v=>`<option value="${v}" ${S.size===v?"selected":""}>${v}</option>`).join("")}</select></div>
       <div class="fs"><h4>Engraving <small>Optional</small></h4><div class="engr"><input class="field" id="engr" maxlength="30" placeholder="Forever yours" value="${S.engr.replace(/"/g,"&quot;")}" aria-label="Engraving"><small id="engrN">${S.engr.length}/30</small></div></div>
      </div>
-     <footer style="justify-content:flex-end"><button class="btn gold" data-close>Done</button></footer>`;
+     <footer><button class="btn line sm" data-clearf>Clear filters</button><button class="btn gold" data-close>Show ${setList().length} settings</button></footer>`;
     $("size").onchange=e=>{S.size=+e.target.value;refresh()};
     $("engr").oninput=e=>{S.engr=e.target.value;$("engrN").textContent=S.engr.length+"/30"};
   }else if(S.modal==="details"){
@@ -354,7 +434,56 @@ function renderModal(){
 }
 
 /* ---------- orchestration ---------- */
-function refresh(){renderHero();renderBar();if(S.modal)renderModal()}
+function refresh(){renderHero();renderBar();renderBuild();renderMini();if(S.modal)renderModal()}
+/* ---------- listing ---------- */
+const PRICEB=[["any","Any price",0,1e9],["u1500","Under $1,500",0,1500],["15-25","$1,500 – $2,500",1500,2500],["25+","$2,500 and up",2500,1e9]];
+function setList(){
+  const [,,lo,hi]=PRICEB.find(p=>p[0]===S.fPrice);
+  let l=SETTINGS.filter(s=>(!S.fStyle||s.style===S.fStyle)&&fromPrice(s)>=lo&&fromPrice(s)<hi);
+  if(S.sort==="low")l=[...l].sort((a,b)=>a.base-b.base);
+  if(S.sort==="high")l=[...l].sort((a,b)=>b.base-a.base);
+  return l;
+}
+function renderBuild(){
+  $("bT").textContent="Choose your setting";
+  $("bS").textContent=S.setting?"Every setting below can take your metal and band choices.":"Start with the shape of the ring, then make it yours.";
+  const l=setList();
+  $("bBody").innerHTML=`<div class="tools"><div class="qs" role="group" aria-label="Style"><button data-fstyle="" aria-pressed="${!S.fStyle}">All styles</button>${STYLES.map(x=>`<button data-fstyle="${x.id}" aria-pressed="${S.fStyle===x.id}">${x.name}</button>`).join("")}</div>
+    <span class="cnt">${l.length} settings</span><select class="sort" id="sort" aria-label="Sort">${[["featured","Featured"],["low","Price: low to high"],["high","Price: high to low"]].map(([v,t])=>`<option value="${v}" ${S.sort===v?"selected":""}>${t}</option>`).join("")}</select><button class="filters-btn" data-modal="filters">${use("sliders")}Filters</button></div>
+    <div class="grid">${l.length?l.slice(0,S.shown).map(s=>{const sel=S.setting===s.id,fav=S.saved.some(c=>c.setting===s.id);
+      return `<article class="card${sel?" sel":""}"><div class="tile ${fam()}"><img src="${img(s)}" alt="" loading="lazy"></div>
+        <button class="pick" data-pick="${s.id}" aria-label="Choose the ${s.name}"></button>
+        ${sel?`<span class="badge">${use("check")}Your setting</span>`:""}
+        <button class="heart" data-fav="${s.id}" aria-pressed="${fav}" aria-label="Save the ${s.name}">${use("heart")}</button>
+        <div class="meta"><span><b>The ${s.name}</b><small>${ST(s.style).name} · ${s.tweak}</small></span><span class="pr num">${money(fromPrice(s))}<small>Setting from</small></span></div></article>`}).join("")
+      :`<p class="empty">No settings in this range.</p>`}</div>
+    ${l.length>S.shown?`<div class="more"><button class="btn line" data-more>Show more · ${l.length-S.shown} remaining</button></div>`:""}`;
+  $("sort").onchange=e=>{S.sort=e.target.value;renderBuild()};
+}
+function renderMini(){
+  if(!S.setting){$("mini").innerHTML="";return}
+  const s=SET(S.setting),si=savedIdx();
+  $("mini").innerHTML=`<button class="th ${fam()}" data-top aria-label="Back to your ring"><img src="${img(s)}" alt=""></button>
+    <span class="tx"><b>The ${s.name}</b><small class="num">${money(total())} · ${metalName()}</small></span>
+    <span class="sep"></span>
+    <button class="ibtn" data-save aria-pressed="${si>-1}">${use("heart")}${si>-1?"Saved":"Save"}</button>
+    <button class="x" data-top aria-label="Back to top">${use("up")}</button>`;
+}
+/* hero scroll: the ring floats away, the controls fade and the stepper glides into the listing */
+function onScroll(){
+  const y=window.scrollY,hero=$("hero"),h=hero.offsetHeight||1;
+  const p=Math.min(1,Math.max(0,y/h));
+  hero.style.setProperty("--p",p.toFixed(3));
+  document.body.classList.toggle("scrolled",y>20);
+  document.body.classList.toggle("mini-on",!!S.setting&&y>h*.62);
+  const vs=$("vstep"),dock=vs.parentElement,b=$("build");
+  const from=hero.offsetTop+dock.offsetTop+vs.offsetTop,to=b.offsetTop+$("hstep").offsetTop,D=Math.max(1,to-from);
+  const t=Math.min(1,Math.max(0,y/D));
+  vs.style.transform=`translateY(${(t*D).toFixed(1)}px) scale(${(.8+.2*t).toFixed(3)})`;
+  hero.style.setProperty("--t",t.toFixed(3));hero.style.setProperty("--D",D+"px");
+  document.body.classList.toggle("hero-steps",t<1);
+  document.body.classList.toggle("bar-gone",t>.6);
+}
 function toggleSave(){
   const i=savedIdx();
   if(i>-1){S.saved.splice(i,1);toast("Removed from your saved rings")}
@@ -381,6 +510,13 @@ document.addEventListener("click",e=>{
   if(d.width){S.width=d.width;refresh();return}
   if(d.w){const i=WIDTHS.findIndex(w=>w[0]===S.width)+ +d.w;if(WIDTHS[i]){S.width=WIDTHS[i][0];refresh()}return}
   if(d.prong){S.prong=d.prong;refresh();return}
+  if(d.top!==undefined){window.scrollTo({top:0,behavior:"smooth"});return}
+  if(d.pick){S.setting=d.pick;S.fStyle=SET(d.pick).style;S.pop=null;refresh();toast(`The ${SET(d.pick).name} is now your setting`);return}
+  if(d.fstyle!==undefined){S.fStyle=d.fstyle||null;S.shown=12;refresh();return}
+  if(d.fprice){S.fPrice=d.fprice;S.shown=12;refresh();return}
+  if(d.clearf!==undefined){S.fStyle=null;S.fPrice="any";S.shown=12;refresh();return}
+  if(d.more!==undefined){S.shown+=12;renderBuild();return}
+  if(d.fav){const had=S.saved.findIndex(c=>c.setting===d.fav);if(had>-1){S.saved.splice(had,1);toast("Removed from your saved rings")}else if(S.saved.length>=5)toast("You can save up to five rings. Remove one to add another.");else{S.saved.push({...snap(),setting:d.fav});toast(`Saved · ${S.saved.length} of 5`)}refresh();return}
   if(d.save!==undefined){toggleSave();return}
   if(d.details!==undefined){openModal("details");return}
   if(d.modal){S.pop=null;renderBar();openModal(d.modal);return}
@@ -388,7 +524,8 @@ document.addEventListener("click",e=>{
 $("scrim").addEventListener("click",e=>{if(e.target.id==="scrim")closeModal()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(S.modal)closeModal();else if(S.pop){S.pop=null;renderBar()}}});
 
-refresh();
+refresh();onScroll();
+addEventListener("scroll",onScroll,{passive:true});addEventListener("resize",onScroll);
 </script>
 
 <!-- Agentation feedback toolbar: development only -->
