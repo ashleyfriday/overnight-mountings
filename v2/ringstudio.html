@@ -69,7 +69,7 @@ img{display:block;max-width:100%}
 .stage.spinning .ring img{animation:spin 6s linear infinite}
 @keyframes float{50%{transform:translateY(-10px)}}
 @keyframes spin{from{transform:perspective(1100px) rotateY(0)}to{transform:perspective(1100px) rotateY(360deg)}}
-.htxt{position:absolute;left:clamp(16px,4vw,56px);top:clamp(110px,16vh,150px);max-width:320px;pointer-events:auto}
+.htxt{position:absolute;left:clamp(16px,4vw,56px);top:calc(clamp(55px,8vh,75px) + 45px);max-width:320px;pointer-events:auto}
 .htxt .eb{font-size:12.5px;color:var(--soft);letter-spacing:.06em}
 .htxt h1{margin:8px 0 6px;font:400 clamp(40px,4.4vw,60px)/1 var(--serif)}
 .htxt h1 em{font-style:italic;color:var(--soft)}
@@ -128,8 +128,11 @@ img{display:block;max-width:100%}
 .hstep button[aria-current="true"] .dot{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .hstep button:disabled{cursor:not-allowed}
 
-.back{position:fixed;z-index:38;top:84px;left:clamp(16px,3vw,40px);display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px 0 10px;border-radius:99px;font-size:13.5px;color:var(--soft);background:rgba(9,9,10,.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:color .2s}
-.back:hover{color:var(--ink)}
+.back-link{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--soft)}
+.back-link:hover{color:var(--ink)}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--soft)}
+.icon-btn:hover{color:var(--ink);border-color:rgba(255,255,255,.4)}
+.icon-btn .ic{width:17px;height:17px}
 
 /* ---------- modal ---------- */
 .scrim{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
@@ -178,9 +181,9 @@ dl.sp dd{margin:0}
   .bar::-webkit-scrollbar{display:none}
 }
 @media (max-width:760px){
-  .nav{grid-template-columns:auto 1fr}.nav .links{display:none}.nav .brand{order:-1}
+  .nav{grid-template-columns:auto 1fr}.nav .brand{order:-1}.nav .back-link{font-size:0;gap:0}.nav .back-link .ic{font-size:initial}
   .nav .right .btn{display:none}
-  .htxt{top:118px;max-width:none;right:16px}.htxt h1{font-size:38px}.htxt .price{margin-top:8px;font-size:21px}.hact{display:none}
+  .htxt{top:104px;max-width:none;right:16px}.htxt h1{font-size:38px}.htxt .price{margin-top:8px;font-size:21px}.hact{display:none}
   .stage{padding-bottom:230px}.ring{width:min(78vw,52vh)}
   .bar{flex-direction:column;gap:12px;padding:12px 0;overflow:visible}
   .bar .gs{overflow-x:auto;scrollbar-width:none;padding:0 4px}
@@ -190,7 +193,7 @@ dl.sp dd{margin:0}
   .bar .tot{align-items:flex-start}
   .pop,.pop.grid2{position:fixed;left:8px;right:8px;bottom:calc(100% + 10px);min-width:0}
   .pop.grid2{min-width:280px;grid-template-columns:1fr}
-  .back{top:72px}.hstep button{width:92px}
+  .hstep button{width:92px}
   .review{grid-template-columns:1fr}
   .sheet{max-height:92vh}
 }
@@ -204,6 +207,9 @@ dl.sp dd{margin:0}
   <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5m6-6-6 6 6 6"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2.2l2.2 10.2a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.8L20.5 8H6.4"/><circle cx="9.5" cy="19.5" r="1.2"/><circle cx="17" cy="19.5" r="1.2"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.8 20c1.2-3.6 3.9-5.4 7.2-5.4s6 1.8 7.2 5.4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
   <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10m4 0h2M4 17h4m4 0h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
   <symbol id="i-spin" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v4h-4"/></symbol>
@@ -212,9 +218,9 @@ dl.sp dd{margin:0}
 </svg>
 
 <header class="nav">
-  <nav class="links" aria-label="Main"><button aria-current="page">Settings</button><button data-info="The diamond step isn't on this page yet">Diamonds</button><button data-info="The review step isn't on this page yet">Review</button></nav>
+  <nav class="links" aria-label="Main"><button class="back-link" id="back"><svg class="ic"><use href="#i-back"/></svg>Back to listing</button></nav>
   <span class="brand"><img class="logo" src="assets/overnight-logo.png" alt="Overnight"></span>
-  <div class="right"><button class="saved-btn" data-saved><svg class="ic"><use href="#i-heart"/></svg>Saved <b id="savedN">0</b></button><button class="btn gold sm" data-info="Opens the existing appointment booking">Book an appointment</button></div>
+  <div class="right"><button class="saved-btn" data-saved><svg class="ic"><use href="#i-heart"/></svg>Saved <b id="savedN">0</b></button><button class="icon-btn" data-info="Your cart is empty" aria-label="Cart"><svg class="ic"><use href="#i-cart"/></svg></button><button class="icon-btn" data-info="Account sign-in isn't set up yet" aria-label="Account"><svg class="ic"><use href="#i-user"/></svg></button><button class="icon-btn" data-info="Search isn't set up yet" aria-label="Search"><svg class="ic"><use href="#i-search"/></svg></button></div>
 </header>
 
 <main>
@@ -234,7 +240,6 @@ dl.sp dd{margin:0}
   </section>
 </main>
 
-<button class="back" id="back"><svg class="ic"><use href="#i-back"/></svg>Back to listing</button>
 <div class="scrim" id="scrim"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
 <div class="toast" id="toast" hidden></div>
 
@@ -253,7 +258,6 @@ const METALS=[["w","White gold","radial-gradient(circle at 34% 30%,#fbfbfb,#d6d7
 const WIDTHS=[["1.5",-40],["2.0",0],["2.5",90],["3.0",180]];
 const PRONGS=[["classic","Classic",0],["petite","Petite",0],["knife","Knife edge",40],["claw","Claw",60]];
 const BANDS=[{id:"comfort",name:"Comfort fit",add:0},{id:"knife",name:"Knife edge",add:60},{id:"pave",name:"Micro pavé",add:420},{id:"split",name:"Split pavé",add:700},{id:"twist",name:"Twist",add:280}];
-const PRICEB=[["any","Any price",0,1e9],["u1500","Under $1,500",0,1500],["15-25","$1,500 – $2,500",1500,2500],["25+","$2,500 and up",2500,1e9]];
 const SICON={
   "solitaire":`<ellipse cx="12" cy="16" rx="7" ry="4.2"/><path d="M12 6.2 14.6 9 12 11.8 9.4 9Z"/>`,
   "hidden-halo":`<ellipse cx="12" cy="16" rx="7" ry="4.2"/><path d="M12 5.6 14.4 8.2 12 10.8 9.6 8.2Z"/><path d="M9.6 11.6q2.4 1.2 4.8 0"/>`,
@@ -288,12 +292,11 @@ function prongSVG(k){
 
 /* ---------- state ---------- */
 const S={setting:"halo-0",metal:"w",kt:"14",band:"comfort",width:"2.0",prong:"classic",size:7,engr:"",
-  spin:false,pop:null,modal:null,fPrice:"any",saved:[]};
+  pop:null,modal:null,saved:[]};
 const CFG=["setting","metal","kt","band","width","prong","size","engr"];
 const snap=()=>Object.fromEntries(CFG.map(k=>[k,S[k]]));
 const sameCfg=(a,b)=>CFG.every(k=>a[k]===b[k]);
 const savedIdx=()=>S.saved.findIndex(c=>sameCfg(c,snap()));
-const setList=(price=S.fPrice)=>{const [,,lo,hi]=PRICEB.find(p=>p[0]===price);return SETTINGS.filter(s=>fromPrice(s)>=lo&&fromPrice(s)<hi)};
 
 /* ---------- hero ---------- */
 let lastSrc="";
@@ -303,11 +306,10 @@ function renderHero(){
   if(lastSrc&&lastSrc!==src){r.classList.add("swap");setTimeout(put,220)}else put();
   lastSrc=src;
   $("hWord").textContent=ST(s.style).name;
-  $("stage").classList.toggle("spinning",S.spin);
   $("htxt").innerHTML=`<div class="eb">Your ring · No. ${s.no}</div><h1><em>The</em> ${s.name}</h1>
     <div class="spec">${ST(s.style).name} · ${metalName()}</div>
     <div class="price num">${money(total())}<small>Setting only</small></div>
-    <div class="hact"><button class="ibtn" data-save aria-pressed="${savedIdx()>-1}">${use("heart")}${savedIdx()>-1?"Saved":"Save"}</button><button class="ibtn" data-spin aria-pressed="${S.spin}">${use("spin")}360°</button><button class="ibtn" data-details>${use("info")}Details</button></div>`;
+    <div class="hact"><button class="ibtn" data-save aria-pressed="${savedIdx()>-1}">${use("heart")}${savedIdx()>-1?"Saved":"Save"}</button><button class="ibtn" data-details>${use("info")}Details</button></div>`;
   $("savedN").textContent=S.saved.length;
 }
 function renderBar(){
@@ -317,10 +319,10 @@ function renderBar(){
       <div class="g"><span class="k">Metal</span><div class="v">${METALS.map(([id,n,g])=>`<button class="sw" data-metal="${id}" aria-pressed="${S.metal===id}" aria-label="${n}" title="${n}" style="background:${g}"></button>`).join("")}</div></div>
       <div class="g"><span class="k">Purity</span><div class="v">${["14","18"].map(k=>`<button class="chip" data-kt="${k}" aria-pressed="${S.metal!=="p"&&S.kt===k}" ${S.metal==="p"?"disabled":""}>${k}K</button>`).join("")}</div></div>
       <div class="g"><span class="k">Band width</span><div class="v step-n"><button data-w="-1" aria-label="Narrower">−</button><output class="num">${S.width} mm</output><button data-w="1" aria-label="Wider">+</button></div></div>
-      <div class="g"><span class="k">Budget</span><div class="v"><button class="drop" data-pop="price">${PRICEB.find(p=>p[0]===S.fPrice)[1]}${use("chev")}</button></div>
-        <div class="pop${S.pop==="price"?" on":""}">${PRICEB.map(([id,t])=>`<button data-fprice="${id}" aria-pressed="${S.fPrice===id}">${t}<small>${setList(id).length}</small></button>`).join("")}</div></div>
+      <div class="g"><span class="k">Prong style</span><div class="v"><button class="drop" data-pop="prong">${PRONGS.find(p=>p[0]===S.prong)[1]}${use("chev")}</button></div>
+        <div class="pop${S.pop==="prong"?" on":""}">${PRONGS.map(([k,t])=>`<button data-prong="${k}" aria-pressed="${S.prong===k}">${prongSVG(k)}${t}</button>`).join("")}</div></div>
       <div class="g"><div class="v"><button class="filters-btn" data-modal="filters">${use("sliders")}More options</button></div></div>`;
-  $("bar").innerHTML=`<div class="gs">${h}</div><div class="end"><div class="tot"><span class="k">Total</span><b class="num">${money(total())}</b></div><button class="btn gold" data-info="The diamond step isn't on this page yet">Choose diamond${use("arrow")}</button></div>`;
+  $("bar").innerHTML=`<div class="gs">${h}</div><div class="end"><div class="tot"><span class="k">From</span><b class="num">${money(total())}</b></div><button class="btn gold" data-info="The diamond step isn't on this page yet">Choose diamond${use("arrow")}</button></div>`;
 }
 
 /* ---------- modal ---------- */
@@ -372,14 +374,13 @@ document.addEventListener("click",e=>{
   if(d.info){toast(d.info);return}
   if(d.saved!==undefined){toast(`${S.saved.length} of 5 saved rings`);return}
   if(d.swap){const idx=+S.setting.split("-").pop();S.setting=`${d.swap}-${idx}`;S.pop=null;refresh();return}
-  if(d.fprice){S.fPrice=d.fprice;S.pop=null;renderBar();return}
+  if(d.prong){S.prong=d.prong;S.pop=null;refresh();return}
   if(d.metal){S.metal=d.metal;refresh();return}
   if(d.kt){S.kt=d.kt;refresh();return}
   if(d.band){S.band=d.band;refresh();return}
   if(d.width){S.width=d.width;refresh();return}
   if(d.w){const i=WIDTHS.findIndex(w=>w[0]===S.width)+ +d.w;if(WIDTHS[i]){S.width=WIDTHS[i][0];refresh()}return}
   if(d.prong){S.prong=d.prong;refresh();return}
-  if(d.spin!==undefined){S.spin=!S.spin;renderHero();return}
   if(d.save!==undefined){toggleSave();return}
   if(d.details!==undefined){openModal("details");return}
   if(d.modal){S.pop=null;renderBar();openModal(d.modal);return}
