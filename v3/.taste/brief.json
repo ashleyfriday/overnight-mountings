@@ -1,0 +1,47 @@
+{
+  "originalRequest": "Forget the mobile view. \nLook only the desktop view.\n\nMake it look luxury",
+  "subject": "Overnight Ring Studio: a guided engagement ring configurator where shoppers choose a setting, customise it, pick a diamond, then review and order",
+  "pageType": "dashboard",
+  "scope": "A desktop-only visual redesign of the existing single-file configurator (/Users/ashley/Documents/om3/index.html). Mobile layout is out of scope. The current flow, data and interactions stay the same.",
+  "primaryGoal": "Make the desktop configurator look and feel like a high-end fine-jewellery atelier, so shoppers trust it and go on to choose a diamond and order",
+  "audience": "Couples shopping for an engagement ring online on desktop. They care about craftsmanship and confidence in a big purchase.",
+  "offer": "Design your own signature ring: pick from 10 setting styles, customise metal, width, size, prongs, finish and engraving, choose a lab or natural diamond, and view it in 360°",
+  "primaryAction": "Continue to Diamond, then complete the ring and order",
+  "creativeControl": "High freedom over visual styling (type scale, spacing, colour refinement, surfaces, motion) while keeping the brand identity and functional flow",
+  "requiredContent": [
+    "Header: Overnight logo, Ring Studio label, appointment, recently viewed and saved-designs icons",
+    "Intro: 'Create your own signature' headline with a short subtitle",
+    "Step 1, Choose your setting: Get Inspired trending picks (The Aurelia, The Etta, The Elise, See all trending), Surprise me, and a grid of 10 styles with prices",
+    "Setting customisation: 8 variants per style plus metal, purity, width, size, prongs, finish and engraving controls",
+    "Step 2, Choose your diamond: lab/natural toggle, shape grid, carat, price, cut, colour and clarity filters, sortable diamond list with match count",
+    "Step 3, Review: summary of setting and diamond with total price and order action",
+    "Sticky ring canvas: large photo stage with thumbnail views, 360° video, heart and share buttons, collapse button",
+    "Your Ring panel: style number, specs strip (setting, metal, width, size, prongs, diamond), setting price, View details and Continue to Diamond",
+    "Condensed sticky step bar with the step tracker",
+    "Overlays: ring detail view, trending modal, saved-designs compare table, recently viewed popover, toasts",
+    "Collapsed floating summary pill"
+  ],
+  "constraints": [
+    "Desktop only (at least 1100px wide); do not redesign mobile",
+    "Keep the existing single-file HTML/CSS/JS structure, element IDs and JS behaviour",
+    "Keep the existing product photos in assets/settings and the 360 videos in 'ring vids'",
+    "Animations should be restrained transitions for steps, filters, selection, drawers and the canvas, and must honour prefers-reduced-motion",
+    "No invented testimonials, credentials or claims"
+  ],
+  "brandInputs": [
+    "Logo: assets/overnight-logo.png (navy OVERNIGHT wordmark), from the existing page",
+    "Colours: warm ivory/pearl background, deep navy/midnight panel with gradient, champagne-gold metallic accents and button gradient, from the existing CSS variables",
+    "Typography: high-contrast serif display (Cormorant-style) for headlines and a clean sans for UI text, from the existing page",
+    "Visual style: soft radial pearl gradients behind ring photos, hairline dividers, small uppercase letter-spaced labels, from the existing 'Version 2 luxury visual layer'"
+  ],
+  "assumptions": [
+    "'Make it look luxury' means elevating the existing desktop visual layer, not changing the product flow",
+    "Configurator interface, so classed as a dashboard-type product screen, with no marketing sections added",
+    "Mobile CSS is left as it is",
+    "Earlier review bugs (price filter, 360 fallback, share) are not part of this styling brief unless they affect the visuals"
+  ],
+  "unresolved": [
+    "Whether the 7 styles without a 360 video should hide the 360 control"
+  ],
+  "explicitAnswers": []
+}

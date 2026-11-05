@@ -1,0 +1,644 @@
+{
+  "version": 1,
+  "page": {
+    "title": "Create your own signature",
+    "route": "/",
+    "description": "Overnight Ring Studio on desktop. A shopper builds an engagement ring in three steps (setting, diamond, review) on a white flow sheet, while the chosen ring, its hallmark strip and its price stay in view on a sticky canvas sheet beside it, both resting on an ivory frame."
+  },
+  "architecture": {
+    "contract": "This screen answers: which ring am I building, and what does it cost so far? Face: the ivory-tinted frame (#F6F3EE) holding two white sheets. Signature element: the hallmark strip under the stage.",
+    "mode": "operate_monitor",
+    "novelty": "medium",
+    "grid": "Window 1440x900. 48px top bar on the frame. Below it, two sheets inset 12px from the left, right and bottom with a 12px gutter, so the sheets are 840px tall (900 - 48 - 12). Canvas open: canvas sheet 578px, flow sheet 826px (12 + 826 + 12 + 578 + 12 = 1440). Flow inner width 824px (1px edges), minus 2 x 24px padding, gives 776px of content. Style tiles: 5 x 136 + 4 x 24 = 776. Field grid: 2 x 376 + 24 = 776. Variant cards: 4 x 176 + 3 x 24 = 776. Canvas inner 576, minus 48, gives 528px. Hallmark strip: 6 x 88 = 528 (rules drawn inside the cells). Thumbs: 5 x 56 + 4 x 12 = 328, centred. Price row: price block 1fr, then View details 120px + 12 + Continue 176px. Canvas closed (no ring picked, or collapsed): flow sheet spans 1416px (12 + 1416 + 12), inner 1414, content 1366, tiles 5 x 254 + 4 x 24 = 1366. One 24px gap horizontally and vertically everywhere inside the sheets.",
+    "signatureRule": "One ivory frame (#F6F3EE) holds the 48px top bar with no rule beneath it. The flow and the ring canvas are two white sheets floating on it, inset 12px with a 12px gutter, each with a 1px #E8E4DD edge, 16px corners and no shadow. The active step is a 2px champagne underline running 8px past its label. Everything else in the chrome is grey.",
+    "rhythm": "Medium density. 48px rows in the diamond list, 48px Get Inspired chips, 32px controls, 24px sheet padding and a single 24px gap. 14px Inter body, 12px sentence-case muted labels, 16px step-card titles, 22px Cormorant step titles and h1, and a 28px Cormorant price. The price is the largest figure on screen."
+  },
+  "navigation": [
+    {
+      "label": "Ring studio",
+      "target": "#/"
+    },
+    {
+      "label": "Book an appointment",
+      "target": "action:appointment-toast"
+    },
+    {
+      "label": "Recently viewed",
+      "target": "overlay:recentPop"
+    },
+    {
+      "label": "Saved designs",
+      "target": "overlay:compare"
+    }
+  ],
+  "navigationDesign": {
+    "layoutCase": "app-shell",
+    "layout": "No sidebar (a configurator with one screen and three steps). A 48px top bar on the ivory frame with no bottom rule. On the left, the protected OVERNIGHT logo at 22px tall, then a 1px x 16px #CFC9C0 divider, then a 'Ring studio' 14px muted label (the product scope). In the centre of the window, the step tracker (Setting, Diamond, Review) at 14px. The current step is in ink at 600 with a 2px #A98B56 underline running 8px past its label; done steps are ink at 400 with a small 12px check; future steps are muted. On the right, inset 24px, three 16px outline icon buttons on a 40px pitch: Book an appointment, Recently viewed, and Saved designs with a #ECE8E1 count chip. The existing #cbar condensed step bar keeps its job inside the flow sheet.",
+    "behavior": [
+      "The step tracker opens the matching step accordion (sB, sD, sE) through the existing step logic and scrolls the flow sheet to it. Diamond and Review are disabled (40% opacity, aria-disabled) until a setting is chosen, and Review until a diamond is chosen.",
+      "Recently viewed toggles #recentPop under its button with aria-expanded. Esc or an outside click closes it, and focus returns to the button.",
+      "Saved designs opens the #compare overlay. Esc closes it and focus returns.",
+      "Book an appointment shows the existing toast 'We'll be in touch to book your appointment', with no new backend.",
+      "Icon buttons have 40x40 hit areas, accessible names, an #ECE8E1 hover fill and a 2px #2B3753 focus ring offset 2px."
+    ],
+    "transformation": {
+      "compact": "Out of scope. The existing mobile header and @media (max-width:900px) rules stay exactly as they are.",
+      "medium": "901-1100px: the same 48px top bar. The step tracker drops to numbers plus the current label, and the icons keep their 40px pitch.",
+      "expanded": "Over 1100px: the full bar as described, with the tracker centred on the window."
+    }
+  },
+  "sections": [
+    {
+      "id": "shell-frame",
+      "layoutFamily": "dashboard",
+      "layoutCases": [
+        "framed-sheet"
+      ],
+      "purpose": "Holds the product: the ivory frame, the top bar, and the two white sheets (flow #flow and canvas #canvas)",
+      "userQuestion": "Where am I, and whose studio is this?",
+      "stage": "orient",
+      "dependencies": [],
+      "evidence": [
+        "assets/overnight-logo.png"
+      ],
+      "copy": {
+        "heading": "Overnight Ring studio",
+        "body": [
+          "Logo, 'Ring studio' scope label, the step tracker (Setting, Diamond, Review) and the appointment, recently viewed and saved-design controls"
+        ],
+        "callsToAction": [
+          {
+            "label": "Book an appointment",
+            "target": "action:appointment-toast"
+          },
+          {
+            "label": "Recently viewed",
+            "target": "overlay:recentPop"
+          },
+          {
+            "label": "Saved designs",
+            "target": "overlay:compare"
+          }
+        ]
+      },
+      "layout": "The body background is #F6F3EE. #flow and #canvas become white sheets with a 16px radius and 1px #E8E4DD edge, inset 12px, with a 12px gutter and no shadow. The canvas sheet is sticky at top 48px with height calc(100vh - 60px) and an internal layout of stage, then hallmark strip, then price row. The flow sheet scrolls in the page. The retired navy gradient panel, metallic gradients and --lift shadows are removed from desktop rules.",
+      "motion": {
+        "purpose": "state_change",
+        "trigger": "state_change",
+        "behavior": "When the first ring is picked, or the canvas is collapsed or reopened, the canvas sheet's width and opacity move together and the flow sheet's width follows. The tile grid reflows from 5 x 254 to 5 x 136 with no per-tile animation.",
+        "durationMs": 220,
+        "easing": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "reducedMotion": "The sheets switch width instantly and the final layout shows at once."
+      },
+      "componentNeeds": [],
+      "assetNeeds": [
+        "overnight-logo"
+      ],
+      "transformation": {
+        "compact": "Out of scope. Existing mobile CSS is unchanged.",
+        "medium": "901-1100px: canvas sheet clamps to 420px, the flow takes the rest and the tiles go to 3 columns.",
+        "expanded": "Over 1100px: canvas 578px at 1440 (clamp 520-620px), the flow takes the remainder and the grid sums close as in architecture.grid."
+      }
+    },
+    {
+      "id": "intro-title",
+      "layoutFamily": "dashboard",
+      "layoutCases": [
+        "app-screen"
+      ],
+      "purpose": "Names the screen and states the one finding next to the action it drives",
+      "userQuestion": "What am I making, and what is my next step?",
+      "stage": "orient",
+      "dependencies": [
+        "shell-frame"
+      ],
+      "evidence": [],
+      "copy": {
+        "heading": "Create your own signature",
+        "body": [
+          "Before a pick: 'Ten settings, each with eight variants. Choose one to begin.' Sample data.",
+          "After a pick, the finding line is computed from state: 'Solitaire · 18K white gold · $1,180 setting. Next, choose its diamond.' Sample data."
+        ],
+        "callsToAction": [
+          {
+            "label": "Surprise me",
+            "target": "action:surprise"
+          }
+        ]
+      },
+      "layout": "The title row at the top of the flow sheet, 24px from its top edge. The h1 is Cormorant Garamond 22/600 in ink with -0.01em tracking. One 14px muted line under it, 8px below, carries the finding, built from the same state the price uses. Surprise me (secondary, 32px) is on the right, centred on the h1's line. The old decorative diamond rule under the intro is removed, and a full-width 1px #F0EDE8 rule sits 24px below the row.",
+      "motion": {
+        "purpose": "feedback",
+        "trigger": "state_change",
+        "behavior": "The finding line's text is swapped in place when the setting, metal or diamond changes, with no fade-in of the row itself.",
+        "durationMs": 160,
+        "easing": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "reducedMotion": "Text swaps instantly."
+      },
+      "componentNeeds": [],
+      "assetNeeds": [],
+      "transformation": {
+        "compact": "Out of scope.",
+        "medium": "The same row. Surprise me wraps under the line if the row is narrower than 520px.",
+        "expanded": "One row: h1 and finding line on the left, Surprise me on the right."
+      }
+    },
+    {
+      "id": "step-setting",
+      "layoutFamily": "dashboard",
+      "layoutCases": [
+        "builder-canvas"
+      ],
+      "purpose": "Step 1 (#sB): pick a setting style from trending picks or the full grid of 10",
+      "userQuestion": "Which setting style suits us?",
+      "stage": "evaluate",
+      "dependencies": [
+        "intro-title"
+      ],
+      "evidence": [
+        "assets/settings/*.jpg"
+      ],
+      "copy": {
+        "heading": "Choose your setting",
+        "body": [
+          "Trending: The Aurelia (Bestseller), The Etta (New), The Elise, then See all trending",
+          "10 styles with their from-prices: Solitaire $1,180, Hidden Halo $1,700, Halo $2,150, Pavé $1,840, Three Stone $2,980, Side Stone $2,350, Channel $2,260, Twist $1,740, Nature Inspired $2,000, Vintage $2,460. Sample data."
+        ],
+        "callsToAction": [
+          {
+            "label": "See all trending",
+            "target": "overlay:trm"
+          },
+          {
+            "label": "Surprise me",
+            "target": "action:surprise"
+          }
+        ]
+      },
+      "layout": "The accordion header (.acc-h) is a 24px navy-outline disc numbered 1, then the Cormorant 22/600 title, then a 14px muted description ('Ten settings, each with eight variants'), with a chevron on the right. A 'Trending' 12px muted label sits above #tstrip: three 48px chips (40px thumbnail on the raised well with 6px radius, name 14/500, tag 12px champagne-ink, 1px #E8E4DD edge, 8px radius) and a 'See all trending' text button with an arrow. #styles is a 5-column grid on the 24px gap. Each tile is a white card with 8px radius and a 1px #E8E4DD edge, with a 112px raised #F4F1EC image well (photo contained, multiply blend), then name 14/500 and from-price 14px tabular muted, centred, on a 48px foot. The selected tile gets a 1.5px #2B3753 inner ring and a 20px #A98B56 check disc at top right. No shadows. Row cap: 2 rows of 5, all 10 shown.",
+      "motion": {
+        "purpose": "feedback",
+        "trigger": "press",
+        "behavior": "On choosing a tile, the navy ring and check fade in on the new tile and out on the old one. Hover darkens the tile edge to #CFC9C0 and lifts the photo 2px inside its well, with the frame fixed.",
+        "durationMs": 180,
+        "easing": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "reducedMotion": "The ring and check appear instantly, and the hover lift is off."
+      },
+      "componentNeeds": [],
+      "assetNeeds": [
+        "setting-photos"
+      ],
+      "transformation": {
+        "compact": "Out of scope.",
+        "medium": "Tiles in 3 columns. The trending strip scrolls sideways inside its row.",
+        "expanded": "Canvas open: 5 x 136. Canvas closed: 5 x 254 with a 168px image well."
+      }
+    },
+    {
+      "id": "setting-customise",
+      "layoutFamily": "dashboard",
+      "layoutCases": [
+        "builder-canvas"
+      ],
+      "purpose": "Tailor the chosen setting: the 8 variants (#fgrid) and band options (#bands), then metal, purity, width, size, prongs, finish and engraving",
+      "userQuestion": "How exactly should this setting be made?",
+      "stage": "evaluate",
+      "dependencies": [
+        "step-setting"
+      ],
+      "evidence": [],
+      "copy": {
+        "heading": "Make it yours",
+        "body": [
+          "Variants of the style: for example Aurelia Classic, Mira Petite, Vela Cathedral, each with its style number and price. Sample data.",
+          "Metal: White gold, Yellow gold, Rose gold, Platinum; purity 14K / 18K. Band width 1.5, 2.0, 2.5 or 3.0 mm (+$0 to +$180). Prongs: Classic, Petite, Knife edge (+$40), Claw (+$60). Band: Comfort fit, Knife edge +$60, Micro pavé +$420, Split pavé +$700, Twist +$280. Engraving up to 20 characters. Sample data."
+        ],
+        "callsToAction": [
+          {
+            "label": "Continue to diamond",
+            "target": "step:sD"
+          }
+        ]
+      },
+      "layout": "Below the style grid, a 12px muted 'Variants of Solitaire' label, then 8 variant cards in 4 columns (176px each): an 88px raised well, name 14/500, style no. 12px tabular muted and price 14px tabular. The selected one gets the navy ring. Then #fgrid as a two-column field grid of 376px. Each field has a 12px muted label above its control, 8px apart, with 24px between rows. Metal is a segmented control of four 32px swatch-plus-label segments; purity, width and prongs are segmented controls as wide as their options; size is a 32px select (4 to 9 in half sizes); finish is a segmented control (High polish, Matte, Hammered); engraving is a 32px input with a live '0 / 20' counter on the right. The selected segment is ink on #ECE8E1 with a 1px ink inner edge. Price adds show as a 12px muted suffix ('+$40'). #moreBand and #bands are a disclosure row: the current band, then 5 options as 48px rows with name and add-on price right-aligned tabular. The .stepcta at the end is the primary 'Continue to diamond' button, right-aligned.",
+      "motion": {
+        "purpose": "feedback",
+        "trigger": "press",
+        "behavior": "The selected segment's fill slides to the chosen option. The band disclosure opens by changing its height. Each change triggers the stage cross-fade and hallmark cell flash in the canvas.",
+        "durationMs": 180,
+        "easing": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "reducedMotion": "Selection and the disclosure change instantly."
+      },
+      "componentNeeds": [],
+      "assetNeeds": [
+        "setting-photos"
+      ],
+      "transformation": {
+        "compact": "Out of scope.",
+        "medium": "The field grid becomes one column and the variants go to 3 columns.",
+        "expanded": "Variants 4 x 176 and fields 2 x 376 at 1440 with the canvas open."
+      }
+    },
+    {
+      "id": "step-diamond",
+      "layoutFamily": "dashboard",
+      "layoutCases": [
+        "app-screen"
+      ],
+      "purpose": "Step 2 (#sD): filter and choose a diamond",
+      "userQuestion": "Which diamond fits our budget and taste?",
+      "stage": "qualify",
+      "dependencies": [
+        "setting-customise"
+      ],
+      "evidence": [],
+      "copy": {
+        "heading": "Choose your diamond",
+        "body": [
+          "Lab grown or Natural. Shapes: Round, Oval, Cushion, Emerald, Pear, Princess, Radiant, Marquise. Carat 0.70 to 2.50 ct, price $500 to $60,000, plus colour D to J, clarity FL to SI2 and cut Ideal, Excellent, Very good. Sample data.",
+          "Rows like 'Round · 1.21 ct · E · VS1 · Ideal · IGI · $2,840'. The count reads '6 diamonds match'. Sample data."
+        ],
+        "callsToAction": [
+          {
+            "label": "Select this diamond",
+            "target": "action:pick-diamond"
+          },
+          {
+            "label": "Show more",
+            "target": "action:dMore"
+          },
+          {
+            "label": "Complete your ring",
+            "target": "step:sE"
+          }
+        ]
+      },
+      "layout": "Header: disc 2, title, description. #dtypes is a two-option segmented control (Lab grown / Natural). #dshapes is an 8-column grid of 88px shape tiles (1.5px ink line glyph, 12px label), with the selected one in the navy ring. Below it, carat and price are two dual-range sliders side by side (376px each) with a 2px #A98B56 range fill on a #E8E4DD track, 16px white thumbs with a 1px #CFC9C0 edge, and tabular min and max outputs. #moreQ is a 'More filters' disclosure with colour, clarity and cut as segmented chips. #qVal is a plain 14px count ('6 diamonds match'), and #qHint is muted. #dlist is a table of 48px rows on #F0EDE8 rules with a 12px muted sentence-case header row (Shape, Carat, Colour, Clarity, Cut, Report, Price) and no band. Carat and price are right-aligned tabular, and the type shows as a pill (Lab grown positive pair, Natural neutral pair). Hover fills #F4F1EC; the selected row has the navy left ring and an ink price. Cap 8 rows with 'Show more' (#dMore). A quiet 12px notice under the header reads 'Sample prices and diamonds', once per view.",
+      "motion": {
+        "purpose": "state_change",
+        "trigger": "state_change",
+        "behavior": "When a filter, type toggle or sort changes, rows that stay keep their identity and rows that change cross-fade. The count swaps text without counting up. The slider fill tracks the thumbs live.",
+        "durationMs": 140,
+        "easing": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "reducedMotion": "The list and count update instantly."
+      },
+      "componentNeeds": [],
+      "assetNeeds": [],
+      "transformation": {
+        "compact": "Out of scope.",
+        "medium": "Shapes in 4 columns and sliders stacked. The table keeps Shape, Carat, Colour, Clarity and Price, with cut and report on a 12px subline.",
+        "expanded": "All columns at 776px. Shapes 8 x 88 + 7 x 10 = 774, centred in the 776px column."
+      }
+    },
+    {
+      "id": "step-review",
+      "layoutFamily": "dashboard",
+      "layoutCases": [
+        "app-screen"
+      ],
+      "purpose": "Step 3 (#sE, #review): confirm the setting and the diamond and see the total",
+      "userQuestion": "Is this the ring, and what will it cost in total?",
+      "stage": "act",
+      "dependencies": [
+        "step-diamond"
+      ],
+      "evidence": [],
+      "copy": {
+        "heading": "Review your ring",
+        "body": [
+          "Setting: Aurelia Solitaire, style no. 51200, 18K white gold, 2.0 mm, size 6, Classic prongs, $1,180. Sample data.",
+          "Diamond: Round 1.21 ct E VS1 Ideal, lab grown, IGI, $2,840. Total $4,020, computed as setting plus diamond. Sample data."
+        ],
+        "callsToAction": [
+          {
+            "label": "Place order",
+            "target": "action:order-toast"
+          },
+          {
+            "label": "Save design",
+            "target": "action:saveDesign"
+          },
+          {
+            "label": "Drop a hint",
+            "target": "action:hint-toast"
+          }
+        ]
+      },
+      "layout": "Header: disc 3, title, description. #review is two 376px cards on the 24px gap: Setting (thumbnail on the raised well, then key-value rows on a 32px pitch with right-aligned values) and Diamond (shape glyph plus key-value rows). Below spans a summary row on the raised #F4F1EC well with 8px radius and 24px padding: the hallmark strip at full 776px width on the left; on the right, 'Total' as a 12px label, the Cormorant 28/500 total, then Place order (primary) and Save design (secondary). Without a diamond, the Diamond card keeps its frame and shows 'No diamond chosen yet' with a 'Choose a diamond' text button.",
+      "motion": {
+        "purpose": "feedback",
+        "trigger": "state_change",
+        "behavior": "The total swaps in place when either part changes, with no count-up.",
+        "durationMs": 160,
+        "easing": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "reducedMotion": "Swaps instantly."
+      },
+      "componentNeeds": [],
+      "assetNeeds": [
+        "setting-photos"
+      ],
+      "transformation": {
+        "compact": "Out of scope.",
+        "medium": "The cards stack and the summary row wraps the total and buttons below the strip.",
+        "expanded": "2 x 376 + 24 = 776."
+      }
+    },
+    {
+      "id": "canvas-stage",
+      "layoutFamily": "dashboard",
+      "layoutCases": [
+        "builder-canvas"
+      ],
+      "purpose": "The sticky canvas sheet (#canvas, #stage): the chosen ring large, its views and its 360 turntable",
+      "userQuestion": "What does our ring look like from every angle?",
+      "stage": "prove",
+      "dependencies": [
+        "step-setting"
+      ],
+      "evidence": [
+        "assets/settings/*.jpg",
+        "ring vids/*_360.mp4"
+      ],
+      "copy": {
+        "heading": "Your ring",
+        "body": [
+          "The photo of the chosen variant in the chosen metal, angle thumbnails, and a 360° toggle that plays the turntable for Solitaire, Hidden Halo and Halo"
+        ],
+        "callsToAction": [
+          {
+            "label": "360°",
+            "target": "action:spinBtn"
+          },
+          {
+            "label": "Save design",
+            "target": "action:saveDesign"
+          },
+          {
+            "label": "Share",
+            "target": "action:share"
+          },
+          {
+            "label": "Collapse",
+            "target": "action:collapse"
+          }
+        ]
+      },
+      "layout": "The top of the canvas sheet is the stage, a raised #F4F1EC well with 8px radius filling 528 x 440 at 900px height, with the ring contained at about 72% and multiply-blended. Pinned 16px inside the well's corners are white 32px round icon buttons with a 1px #E8E4DD edge and no shadow: collapse at top left, heart (#saveDesign) and share at top right. The '360°' toggle is a 12px text button centred 16px above the well's bottom, with aria-pressed. #thumbs is a centred row of five 56px thumbnails at 8px radius with a 1px edge, 12px apart, 16px under the well; the selected one has the navy ring. For styles without a turntable the 360° toggle is disabled with the tooltip 'Turntable coming for this style' (resolves the unresolved item without hiding the control).",
+      "motion": {
+        "purpose": "state_change",
+        "trigger": "state_change",
+        "behavior": "Changing a thumbnail, variant or metal cross-fades the photo in place. The 360° toggle cross-fades the photo to the video, which plays only on press; videos set src and preload only on first press.",
+        "durationMs": 200,
+        "easing": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "reducedMotion": "The photo swaps instantly and the video does not autoplay; a play control shows instead."
+      },
+      "componentNeeds": [],
+      "assetNeeds": [
+        "setting-photos",
+        "ring-360-videos"
+      ],
+      "transformation": {
+        "compact": "Out of scope.",
+        "medium": "Canvas 420px wide with the well at 372 x 320 and 48px thumbnails.",
+        "expanded": "528px-wide well. The well height flexes to fill the sheet above the strip and price row (min 360px)."
+      }
+    },
+    {
+      "id": "your-ring-panel",
+      "layoutFamily": "dashboard",
+      "layoutCases": [
+        "builder-canvas"
+      ],
+      "purpose": "Under the stage: the hallmark strip (#cvSpec), style number (#cvCode), price (#cvPrice) and the step's primary action (#cvCta)",
+      "userQuestion": "What exactly have we chosen, and what does it cost?",
+      "stage": "act",
+      "dependencies": [
+        "canvas-stage",
+        "setting-customise"
+      ],
+      "evidence": [],
+      "copy": {
+        "heading": "Aurelia Solitaire",
+        "body": [
+          "Hallmark strip: Setting Solitaire · Metal 18K white gold (stamp '18K') · Width 2.0 mm · Size 6 · Prongs Classic · Diamond 'Not chosen' in muted. Sample data.",
+          "Style no. 51200. Setting price $1,180. Sample data."
+        ],
+        "callsToAction": [
+          {
+            "label": "View details",
+            "target": "overlay:detail"
+          },
+          {
+            "label": "Continue to diamond",
+            "target": "step:sD"
+          },
+          {
+            "label": "Drop a hint",
+            "target": "action:hint-toast"
+          }
+        ]
+      },
+      "layout": "Inside the canvas sheet below the thumbs, separated by a 1px #F0EDE8 rule. Row 1 has the ring's name in Cormorant 22/600 with 'Style no. 51200' in 12px tabular muted after it, and 'Drop a hint' as a 14px navy text link on the right. Row 2 is the hallmark strip, six 88px cells with a 12px muted label above a 14px ink value, split by 1px #F0EDE8 rules. The metal cell holds the stamp (1px #A98B56 border, 4px radius, 12px #7F6435 '18K' or 'PT950') before the metal name. A missing diamond shows a muted 'Not chosen'. Row 3 has 'Setting price' as a 12px label over the price in Cormorant 28/500 tabular ink on the left, and View details (secondary, 120px) and the primary (176px, label follows the step: 'Continue to diamond', 'Complete your ring', 'Place order') on the right, centred on the price. Before a pick, the canvas sheet is closed.",
+      "motion": {
+        "purpose": "feedback",
+        "trigger": "state_change",
+        "behavior": "The changed hallmark cell's value swaps and a 2px champagne underline flashes under it. The price swaps in place.",
+        "durationMs": 160,
+        "easing": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "reducedMotion": "Values swap instantly with no underline flash."
+      },
+      "componentNeeds": [],
+      "assetNeeds": [],
+      "transformation": {
+        "compact": "Out of scope; the existing mobile .panel rule is untouched.",
+        "medium": "The strip becomes 3 x 2 cells and the buttons stack under the price.",
+        "expanded": "6 x 88 = 528, with the price row on one line."
+      }
+    },
+    {
+      "id": "condensed-step-bar",
+      "layoutFamily": "dashboard",
+      "layoutCases": [
+        "app-screen"
+      ],
+      "purpose": "#cbar: keeps the current step and the tracker in view while the flow sheet scrolls",
+      "userQuestion": "Which step am I on while I scroll?",
+      "stage": "continue",
+      "dependencies": [
+        "shell-frame"
+      ],
+      "evidence": [],
+      "copy": {
+        "heading": "Choose your setting",
+        "body": [
+          "The current step's title, beside the Setting, Diamond and Review step links"
+        ],
+        "callsToAction": [
+          {
+            "label": "Setting",
+            "target": "step:sB"
+          },
+          {
+            "label": "Diamond",
+            "target": "step:sD"
+          },
+          {
+            "label": "Review",
+            "target": "step:sE"
+          }
+        ]
+      },
+      "layout": "A 48px white strip sticky at top 48px inside the flow sheet, spanning its inner width, with the top corners following the sheet's 16px radius and a 1px #F0EDE8 bottom rule. The title is Cormorant 16/600 on the left, and the tracker (#tsteps) on the right in 14px with the 2px champagne underline. It sits only over the flow sheet, never over the canvas (which fixes the overlap the review found). It shows once the step header scrolls past.",
+      "motion": {
+        "purpose": "state_change",
+        "trigger": "state_change",
+        "behavior": "Shows with opacity and a 4px translate when the step header leaves view. The underline slides between steps.",
+        "durationMs": 200,
+        "easing": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "reducedMotion": "Appears instantly and the underline jumps."
+      },
+      "componentNeeds": [],
+      "assetNeeds": [],
+      "transformation": {
+        "compact": "Out of scope.",
+        "medium": "The title truncates with an ellipsis and the tracker shows step numbers only.",
+        "expanded": "Full title and tracker."
+      }
+    },
+    {
+      "id": "overlays",
+      "layoutFamily": "dashboard",
+      "layoutCases": [
+        "tabbed-object-detail"
+      ],
+      "purpose": "Ring detail (#detail), trending (#trm, #plist), saved-design compare (#compare), recently viewed (#recentPop), diamond picker (#dpm) and toasts (#toast)",
+      "userQuestion": "Can we look closer, compare our saved designs, or go back to one we saw?",
+      "stage": "de_risk",
+      "dependencies": [
+        "your-ring-panel"
+      ],
+      "evidence": [],
+      "copy": {
+        "heading": "Saved designs",
+        "body": [
+          "Compare up to 4 saved designs side by side: photo, setting, metal, width, size, prongs, finish, engraving, diamond and price, with differing rows marked. Sample data.",
+          "Trending: 8 settings such as Aurelia Solitaire, Mira Hidden Halo and Vela Halo, each with its price. Sample data.",
+          "Recently viewed: the settings opened most recently, with their thumbnails."
+        ],
+        "callsToAction": [
+          {
+            "label": "Remove",
+            "target": "action:remove-saved"
+          },
+          {
+            "label": "Open design",
+            "target": "action:restore-saved"
+          },
+          {
+            "label": "Close",
+            "target": "action:close"
+          }
+        ]
+      },
+      "layout": "All overlays are white with 16px radius, a 1px #E8E4DD edge, the one float shadow 0 12px 32px rgba(26,35,56,.10) and a rgba(27,31,42,.32) scrim. Their titles are Cormorant 22/600 with a 32px close button. #detail is a two-column sheet (stage on the left, key-value details on 32px rows on the right). #compare is a table with 12px muted row labels, 14px values, rules only, and differing cells marked with a 2px champagne left edge; it adds Finish and Engraving rows. #recentPop is a 320px popover of 48px rows. #trm shows 8 cards on the tile spec. The toast is midnight #1A2338 with ivory 14px text, 8px radius, bottom centre. The empty compare state keeps its frame: 'No saved designs yet. Use the heart on your ring to save one.'",
+      "motion": {
+        "purpose": "state_change",
+        "trigger": "press",
+        "behavior": "The scrim fades and the panel moves 8px into place. Esc and Close reverse it. Focus moves to the panel's title on open, stays inside while open and returns to the opener on close.",
+        "durationMs": 200,
+        "easing": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "reducedMotion": "Opens and closes instantly with focus handling unchanged."
+      },
+      "componentNeeds": [],
+      "assetNeeds": [
+        "setting-photos"
+      ],
+      "transformation": {
+        "compact": "Out of scope.",
+        "medium": "Detail stacks the stage above the info, and compare scrolls inside its frame with the label column fixed.",
+        "expanded": "Detail 1120px wide and compare up to 4 columns of 220px plus a 160px label column."
+      }
+    },
+    {
+      "id": "summary-pill",
+      "layoutFamily": "dashboard",
+      "layoutCases": [
+        "app-screen"
+      ],
+      "purpose": "#pill: the collapsed canvas as a floating summary with its primary action",
+      "userQuestion": "With the ring hidden, what have we chosen, and how do we bring it back?",
+      "stage": "continue",
+      "dependencies": [
+        "your-ring-panel"
+      ],
+      "evidence": [],
+      "copy": {
+        "heading": "Aurelia Solitaire",
+        "body": [
+          "18K white gold · 2.0 mm · size 6 · $1,180. Sample data."
+        ],
+        "callsToAction": [
+          {
+            "label": "Show ring",
+            "target": "action:expand"
+          }
+        ]
+      },
+      "layout": "Fixed 24px from the bottom and right of the window, white with 8px radius, a 1px #E8E4DD edge and the faint float shadow. It holds a 56px thumbnail on the raised well, the name 14/600, a compressed hallmark line (12px muted, with the purity stamp) and a 32px primary 'Show ring'. It covers nothing; the flow sheet keeps 96px of bottom padding while the pill shows.",
+      "motion": {
+        "purpose": "state_change",
+        "trigger": "state_change",
+        "behavior": "It rises 8px and fades in as the canvas collapses, and reverses on expand.",
+        "durationMs": 220,
+        "easing": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "reducedMotion": "Appears instantly."
+      },
+      "componentNeeds": [],
+      "assetNeeds": [
+        "setting-photos"
+      ],
+      "transformation": {
+        "compact": "Out of scope.",
+        "medium": "The same pill, with the hallmark line truncating.",
+        "expanded": "Max width 420px."
+      }
+    }
+  ],
+  "responsive": [
+    "The desktop redesign applies at 901px and up; every new rule is scoped to @media (min-width:901px) so the existing mobile CSS stays untouched.",
+    "At 1440x900, these are on the first screen: the top bar with all three steps, the h1 and finding, the Step 1 header, the trending chips, both rows of style tiles (canvas closed), or the first tile row plus the full canvas (stage, thumbs, hallmark strip, price, Continue to diamond) once a ring is picked.",
+    "At 1101-1300px the canvas clamps to 520px and the tile grid stays at 5 columns. At 901-1100px it goes to 3 columns with a 420px canvas."
+  ],
+  "interactions": [
+    "Pick a style tile: it is selected (aria-pressed true, navy ring and champagne check), the canvas opens if closed, the stage shows the photo, the hallmark strip and price update from one state object, and the finding line is rebuilt.",
+    "Variants, metal, purity, width, prongs, finish, size, engraving and band: each updates the stage photo, its hallmark cell (with the underline flash) and the price. The engraving counter enforces 20 characters and shows a negative message past it.",
+    "Diamond filters (type, shape, carat range, price range, colour, clarity, cut) recompute the list and the '# diamonds match' count from the rows. Zero matches keeps the table frame with one row spanning all columns: 'No diamonds match these filters. Try a wider carat range.' plus a 'Reset filters' text button.",
+    "Choosing a diamond row selects it (aria-selected, navy ring), fills the hallmark Diamond cell, changes the primary label to 'Complete your ring' and enables Review in the tracker.",
+    "The step tracker and #cbar open the step accordions with aria-expanded and scroll the flow sheet; disabled steps are not focusable as actions.",
+    "360° toggle: aria-pressed. Loads the video on first press only, and is disabled with a tooltip for styles with no turntable.",
+    "Heart saves the design to localStorage (max 4) and shows the toast 'Saved to your designs (2 of 4)'. The count chip updates. At 4, the toast reads 'You have 4 saved designs. Remove one to save this.'",
+    "Share keeps its toast but its copy changes to 'Share link ready' unless the URL is actually copied with navigator.clipboard (copy when available).",
+    "Overlays: Esc closes the top-most overlay only; body scroll lock is reference-counted so closing one overlay never unlocks scroll while another stays open; focus is trapped and restored.",
+    "Control states: hover fills #ECE8E1 or darkens the edge to #CFC9C0; focus-visible gets a 2px #2B3753 ring offset 2px; selected gets the 1.5px navy ring or the ink segment; disabled is 40% opacity, cursor not-allowed and aria-disabled.",
+    "Loading: tile and stage photos keep their wells at final size with the raised fill until loaded. There is no shimmer and no layout shift.",
+    "Error: a failed photo keeps its well and shows a 12px muted 'Photo unavailable'. A failed video reverts to the photo with a toast 'The 360 view could not load'.",
+    "Reduced motion: all transitions are off and final states are immediate, with identical operation."
+  ],
+  "acceptanceCriteria": [
+    "Sample dataset shape stays as in index.html: 10 STYLES, 80 SETTINGS (8 per style), 8 TRENDING ids, 120 DIAMONDS (D1000-D1119), 8 SHAPES, 4 WIDTHS, 4 PRONGS, 5 BANDS. console.assert(SETTINGS.length===80 && DIAMONDS.length===120).",
+    "One price, many places: the canvas price, pill price, review setting price and the finding line are all read from one function. console.assert that the canvas price text equals the review setting text after every change. The review total equals the displayed setting price plus the displayed diamond price.",
+    "The match count equals the number of filtered rows, recomputed on every filter change, including 0.",
+    "The hallmark strip shows the same six values, in the same order, in the canvas, the pill and the review.",
+    "At 1440x900 with a ring picked, the stage, thumbs, hallmark strip, price and Continue to diamond show without scrolling the canvas, and the flow shows the h1, Step 1 header, trending chips and the first tile row.",
+    "The grid sums close: tiles 5 x 136 + 4 x 24 = 776 with the canvas open, and 5 x 254 + 4 x 24 = 1366 closed. Sheets are inset 12px with a 12px gutter, and the cards end exactly on the content edges.",
+    "No shadow at rest on sheets, cards or tiles. No gradient on chrome or buttons. Colour coverage on the first screenshot is at or under 3% (navy primary, selection ring, champagne underline and stamp).",
+    "Inter (400/500/600) and Cormorant Garamond (500/600) are loaded: document.fonts.check('600 22px \"Cormorant Garamond\"') and document.fonts.check('500 14px Inter') are true after document.fonts.ready, and tabular-nums changes Inter digit widths.",
+    "Every label is sentence case with no letter-spacing tracking; there is no uppercase text in the desktop UI.",
+    "Every text colour reaches 4.5:1 on its surface (muted #5E636D, faint #6B6E75, champagne-ink #7F6435).",
+    "#cbar never overlaps the canvas sheet's buttons at any desktop width.",
+    "Keyboard: every control is reachable, focus is visible, Esc closes overlays and returns focus, and the accordion, toggles and selections expose aria-expanded, aria-pressed or aria-selected.",
+    "Mobile (900px and below) renders the same as before the change, checked by a before-and-after screenshot at 390px through the iframe method.",
+    "'Sample prices and diamonds' shows once as a quiet 12px notice in the diamond step, not on every block.",
+    "Copy has no em dashes, no hype, no invented claims, and all figures carry units ($, ct, mm)."
+  ]
+}

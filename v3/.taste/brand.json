@@ -1,0 +1,360 @@
+{
+  "version": 1,
+  "foundation": {
+    "strategy": "extend",
+    "existingAssets": [
+      "/Users/ashley/Documents/om3/assets/overnight-logo.png",
+      "/Users/ashley/Documents/om3/assets/settings/",
+      "/Users/ashley/Documents/om3/ring vids/Solitaire_360.mp4",
+      "/Users/ashley/Documents/om3/ring vids/HiddenHalo_360.mp4",
+      "/Users/ashley/Documents/om3/ring vids/Halo_360.mp4",
+      "/Users/ashley/Documents/om3/index.html (CSS variables lines 13-19 and 433-440, Google Fonts link line 6)"
+    ],
+    "assetActions": [
+      {
+        "asset": "assets/overnight-logo.png",
+        "action": "protect",
+        "reason": "This is the verified navy OVERNIGHT wordmark (490x117). It goes at the top left of the top bar at 22px tall, never recoloured or redrawn."
+      },
+      {
+        "asset": "assets/settings/*.jpg",
+        "action": "preserve",
+        "reason": "These are the real product photos of every style and variant, required by the brief. They sit on their own cream ground inside the stage and the tiles."
+      },
+      {
+        "asset": "ring vids/*_360.mp4",
+        "action": "preserve",
+        "reason": "These are the real 360° turntables, required by the brief. They are loaded only when 360° is pressed."
+      },
+      {
+        "asset": "Existing CSS palette (--bg, --ink, --accent, --midnight, --champ*)",
+        "action": "evolve",
+        "reason": "The ivory, navy and champagne identity stays. The roles are remapped onto the framed-sheet tokens, and --faint #8d9199 is darkened because it fails 4.5:1."
+      },
+      {
+        "asset": "--metal champagne gradient on buttons, navy radial-gradient panel, --lift shadows",
+        "action": "retire",
+        "reason": "The sheet allows no gradients and no shadows at rest. Luxury comes from restraint and flat tone steps, not from metallic fills."
+      },
+      {
+        "asset": "Uppercase letter-spaced labels (SETTING, METAL, GET INSPIRED)",
+        "action": "evolve",
+        "reason": "House type rule: sentence case, no tracked capitals. They become 12px muted sentence-case labels."
+      },
+      {
+        "asset": "Fonts Cormorant Garamond + Inter (Google Fonts)",
+        "action": "preserve",
+        "reason": "These are the verified existing brand typefaces. They replace the sheet's IBM Plex pair."
+      }
+    ],
+    "lockedDecisions": [
+      "Desktop only (at least 1100px). The mobile CSS in the @media (max-width:900px) block stays untouched.",
+      "Keep the single-file structure, element IDs and JS behaviour of index.html.",
+      "Interface face is Inter (existing brand), not IBM Plex Sans.",
+      "Cormorant Garamond (existing brand) has one job: the intro headline, step titles, the ring's name and the price.",
+      "Brand colours are ivory ground, navy ink/accent (#2b3753, #1a2338) and champagne (#a98b56 / #7f6435), mapped onto the sheet roles.",
+      "Product photos and the 360 videos are the only imagery.",
+      "No testimonials, credentials or claims added."
+    ],
+    "assumptions": [
+      "IBM Plex Mono is not added: Cormorant plus Inter already make two faces, and a third is not allowed. Style numbers like #51200 use Inter with tabular figures.",
+      "Shell uses the sheet's variant three: the flow and the ring canvas are two white sheets floating on the ivory frame, inset 12px, with a 12px gutter. The top bar is 48px on the same frame.",
+      "There are no charts in this product. chart-1 (navy) marks the one selected state (the chosen tile, variant, shape or diamond row), and chart-2 (champagne) marks the hallmark device and the active-step underline.",
+      "The 'Your Ring' panel moves from a navy gradient block to a white sheet section, so the navy budget stays under 3%. Navy survives as ink, the primary fill and the selection ring.",
+      "Price figures are mock data and stay as they are."
+    ]
+  },
+  "creativeDirection": {
+    "summary": "Face chosen: the frame tinted from the product's world. The frame is a warm pearl-ivory step (#f6f3ee) instead of #f9fbfc, holding two white sheets, like rings laid on a jeweller's ivory tray. Everything else is quiet navy ink, hairlines and one champagne thread.",
+    "traits": [
+      {
+        "quality": "Atelier calm: generous white sheets and hairline structure",
+        "boundary": "not empty or thin; every step shows its controls and first rows above the fold"
+      },
+      {
+        "quality": "Precise, like a jeweller's spec card: tabular figures and aligned values",
+        "boundary": "not technical or developer-like"
+      },
+      {
+        "quality": "Warm: ivory, champagne, serif for the ring's name and the price",
+        "boundary": "not gold-gradient, glossy or 'bling'"
+      }
+    ],
+    "productiveTension": "A fine-jewellery serif and champagne warmth sit inside the strict flat grammar of a working builder: romance in two places (the name and the price), engineering everywhere else.",
+    "signatureDevice": {
+      "description": "The hallmark strip: the ring's specification set like a certificate line under the stage (setting · metal · width · size · prongs · diamond), with the metal purity struck as a small hallmark stamp (a 1px champagne-outlined rounded rectangle reading '18K' or 'PT950'), and the style number in tabular Inter. It updates in place as the shopper changes options.",
+      "status": "candidate",
+      "invariants": [
+        "One line of six cells split by 1px rules on white, values 14px ink, labels 12px muted in sentence case",
+        "The hallmark stamp is the only outlined champagne element: 1px #a98b56 border, 4px radius, 11-12px #7f6435 text",
+        "The changed cell gets a 160ms ink-to-champagne underline flash on update, with no motion when reduced motion is on",
+        "The strip appears in the Your Ring panel, the floating pill (compressed) and the review summary, always in the same order"
+      ]
+    },
+    "restraint": "Colour under 3% of pixels. Navy is reserved for the primary button and the selection ring, and champagne for the hallmark and the 2px active-step underline. No shadows at rest, no gradients on chrome, no decorative imagery.",
+    "avoid": [
+      "Metallic gradient buttons",
+      "Navy gradient panels",
+      "Uppercase tracked labels",
+      "Drop shadows on tiles and cards",
+      "Heavy #cfc9c0 borders on cards",
+      "A fourth nesting level (frame, sheet, card is the limit)",
+      "Serif in controls or tables",
+      "Display sizes over 32px",
+      "Sparkle or glow effects on diamonds"
+    ]
+  },
+  "colorPalette": [
+    {
+      "name": "ground",
+      "value": "#F6F3EE",
+      "usage": "The frame: top bar and gutters around the two sheets. A pearl-ivory step from the brand's #faf8f5, so the white sheets read against it (the chosen face)."
+    },
+    {
+      "name": "surface",
+      "value": "#FFFFFF",
+      "usage": "The flow sheet, the canvas sheet, cards, inputs and overlays"
+    },
+    {
+      "name": "raised",
+      "value": "#F4F1EC",
+      "usage": "Inner wells: the photo stage behind the ring, tile image areas, the review summary well. One warm step below white."
+    },
+    {
+      "name": "active",
+      "value": "#ECE8E1",
+      "usage": "Hover and pressed fill on rows, segmented controls and icon buttons"
+    },
+    {
+      "name": "border",
+      "value": "#E8E4DD",
+      "usage": "1px sheet and card edges (warm, about 1.2:1 on white)"
+    },
+    {
+      "name": "rule",
+      "value": "#F0EDE8",
+      "usage": "Row rules in the diamond list and the hallmark strip dividers"
+    },
+    {
+      "name": "control",
+      "value": "#CFC9C0",
+      "usage": "Control borders: selects, inputs, secondary buttons, unselected chips (the existing --hair-2)"
+    },
+    {
+      "name": "text",
+      "value": "#1B1F2A",
+      "usage": "Primary ink (the existing --ink), about 16:1 on white"
+    },
+    {
+      "name": "muted",
+      "value": "#5E636D",
+      "usage": "Secondary text and labels, 6.1:1 on white and 5.6:1 on the ground"
+    },
+    {
+      "name": "faint",
+      "value": "#6B6E75",
+      "usage": "Placeholders and meta. Replaces --faint #8d9199 (3.2:1, fails); this reaches 5.1:1 on white."
+    },
+    {
+      "name": "accent",
+      "value": "#2B3753",
+      "usage": "Brand navy: focus ring, the link 'Drop a hint', the selected state outline. Under 3% of pixels."
+    },
+    {
+      "name": "primary",
+      "value": "#1A2338",
+      "usage": "Midnight fill of the one primary button per view, with a #FBF8F2 label (14.9:1)"
+    },
+    {
+      "name": "champagne",
+      "value": "#A98B56",
+      "usage": "Non-text only: the 2px active-step underline, the hallmark stamp border, the selected-tile check disc (3.2:1 on white)"
+    },
+    {
+      "name": "champagne-ink",
+      "value": "#7F6435",
+      "usage": "Champagne as text: the hallmark stamp text and 'Bestseller'/'New' tags, 5.6:1 on white"
+    },
+    {
+      "name": "positive",
+      "value": "#2E6E4C",
+      "usage": "In-stock, 'Ships in 3 weeks' and match confirmations as text (the existing --fall), 6.0:1"
+    },
+    {
+      "name": "negative",
+      "value": "#C4242A",
+      "usage": "Errors such as an engraving too long or a size out of range"
+    },
+    {
+      "name": "warning",
+      "value": "#92400E",
+      "usage": "Notices such as 'Only 2 like this' or a price change"
+    },
+    {
+      "name": "chart-1",
+      "value": "#2B3753",
+      "usage": "The main data element is the selected item: the 1.5px navy selection ring on the chosen tile, variant, shape and diamond row"
+    },
+    {
+      "name": "chart-2",
+      "value": "#A98B56",
+      "usage": "The secondary mark: the price-range track fill and the carat slider range"
+    },
+    {
+      "name": "chart-3",
+      "value": "#A86F0C",
+      "usage": "Reserved, unused unless a third series is needed"
+    },
+    {
+      "name": "pill-positive-bg",
+      "value": "#DCFAE5",
+      "usage": "Background of 'Lab grown' and 'In stock' pills"
+    },
+    {
+      "name": "pill-positive-ink",
+      "value": "#04250E",
+      "usage": "Text on positive pills"
+    },
+    {
+      "name": "pill-negative-bg",
+      "value": "#FFEDEA",
+      "usage": "Background of error pills"
+    },
+    {
+      "name": "pill-negative-ink",
+      "value": "#831C1E",
+      "usage": "Text on negative pills"
+    },
+    {
+      "name": "pill-warning-bg",
+      "value": "#FFFBEB",
+      "usage": "Background of notice pills, with a #FDE68A border"
+    },
+    {
+      "name": "pill-warning-ink",
+      "value": "#92400E",
+      "usage": "Text on notice pills"
+    },
+    {
+      "name": "pill-neutral-bg",
+      "value": "#ECE8E1",
+      "usage": "Background of 'Natural', 'Bestseller' and count chips"
+    },
+    {
+      "name": "pill-neutral-ink",
+      "value": "#353736",
+      "usage": "Text on neutral pills"
+    }
+  ],
+  "typefaces": [
+    {
+      "family": "Inter",
+      "source": "Google Fonts (existing brand, already linked in index.html line 6)",
+      "roles": [
+        "interface",
+        "controls",
+        "tables",
+        "labels",
+        "figures (tabular-nums)"
+      ],
+      "weights": [
+        400,
+        500,
+        600
+      ]
+    },
+    {
+      "family": "Cormorant Garamond",
+      "source": "Google Fonts (existing brand, already linked in index.html line 6)",
+      "roles": [
+        "one job: the intro headline, step titles, the ring's name and the setting/total price"
+      ],
+      "weights": [
+        500,
+        600
+      ]
+    }
+  ],
+  "interfaceDirection": "Shell: a 48px top bar on the ivory frame with no rule beneath it. It holds the logo and a 'Ring studio' muted label on the left, a centred step tracker (1 Setting, 2 Diamond, 3 Review, with the active step marked by a 2px champagne underline running 8px past the label, the others muted), and on the right three 16px outline icon buttons (Book an appointment, Recently viewed, Saved designs with a count chip) on a 40px pitch. Below are two white sheets inset 12px from every window edge with a 12px gutter, 16px radius, 1px #E8E4DD edge and no shadow. The left flow sheet scrolls; the right canvas sheet is 40vw and sticky. Inside the sheets the padding is 24px with one 24px gap everywhere. The flow sheet starts with the Cormorant title row. Steps are sections split by a full-width 1px rule, each with a 22/600 Cormorant title, a numbered 24px navy-outline disc and a 14px muted description. Style tiles form a 5-column grid on the 24px gap: white card, 8px radius, 1px border, a raised image well, and name 14/500 and price 14 tabular below. The selected tile gets the 1.5px navy ring and a 20px champagne check disc. Get Inspired items are 48px row chips with thumbnails. Controls are 32px tall, 6px radius, 1px #CFC9C0 border; segmented controls (metal, purity, width, prongs, finish, lab/natural) use a white fill with the selected segment in ink text on #ECE8E1 and a 1px ink inner edge. Diamond list rows are 48px on rules with no zebra stripes and no header band; headers are 12px muted sentence case; carat, price and grade values are right-aligned tabular; the match count is plain text ('42 matches'). The canvas sheet holds the raised photo stage, a 360° text toggle, 56px thumbnail views at 8px radius, the hallmark strip, and the price block (Cormorant 28/500 price, 'Setting price' 12px label) with a secondary 'View details' and the primary 'Continue to diamond' on one line. Labels are 12px sentence-case muted, never tracked capitals. Status pills are 20px tall at 999px radius in 12px using the pill pairs: Lab grown positive, Natural neutral, Bestseller neutral with champagne-ink text, notices warning. Control states: hover is an #ECE8E1 fill or a border darkened to #8F8A83; focus is a 2px #2B3753 ring offset 2px; selected is the navy ring; disabled is 40% opacity with no pointer. The condensed sticky step bar is a 48px white strip on the flow sheet with a 1px rule, holding the step title in Cormorant 16/600 and the tracker. Overlays (detail, trending, compare, recent popover) are white with 16px radius, 1px border and the one permitted float shadow 0 12px 32px rgba(26,35,56,.10) over a rgba(27,31,42,.32) scrim. Toasts are midnight with ivory text and 8px radius.",
+  "designTokens": {
+    "typeScale": {
+      "display": "22px",
+      "h1": "22px",
+      "h2": "16px",
+      "h3": "28px",
+      "body": "14px",
+      "small": "12px",
+      "label": "12px"
+    },
+    "radius": {
+      "scale": [
+        "6px",
+        "8px",
+        "16px"
+      ],
+      "pill": "999px"
+    },
+    "spacing": {
+      "section": "24px",
+      "gutter": "24px",
+      "stack": "24px"
+    },
+    "buttons": {
+      "primary": "Midnight #1A2338 fill, #FBF8F2 Inter 14/500 label, 32px tall, 6px radius, 16px side padding, an optional 14px arrow icon 8px after the label. Hover lifts to #2B3753, pressed is #121827, focus is a 2px navy ring offset 2px. One per view: 'Continue to diamond', 'Complete your ring', 'Place order'.",
+      "secondary": "White #FFFFFF fill, 1px #CFC9C0 border, #1B1F2A Inter 14/500 label, 32px tall, 6px radius. Hover fills #F4F1EC with a #8F8A83 border. Used for 'View details', 'Surprise me', 'See all trending' and 'Compare'."
+    },
+    "surfaces": "Ivory #F6F3EE frame holding the top bar and the gutters. Two white sheets with a 1px #E8E4DD edge and 16px radius; cards inside them are white with a 1px border at 8px radius; inner wells are raised #F4F1EC. Three levels only: frame, sheet, card or well. Row rules are #F0EDE8. Nothing casts a shadow at rest; only overlays, menus and toasts that float get one faint shadow."
+  },
+  "imageDirection": {
+    "summary": "The only imagery is the product itself: studio photos of each setting and its 8 variants, the five angle views, and the 360° turntable videos. There is no decorative imagery.",
+    "subjects": [
+      "Setting photos from assets/settings on the raised well in tiles, the stage and thumbnails",
+      "360° turntables from ring vids (Solitaire, Hidden Halo, Halo) in the stage",
+      "Diamond shape outline icons (round, oval, emerald and so on) drawn as 1.5px ink line glyphs in the shape grid",
+      "Small ring thumbnails in Get Inspired chips, the pill, recently viewed and the compare table"
+    ],
+    "treatment": "Photos sit centred on the raised #F4F1EC well with mix-blend-mode multiply so their cream ground merges with the well. They are contained, not cropped, and use the same scale across tiles. The rose-gold metal state may keep its existing photo tint filter, but nothing else is filtered. Thumbnails are 8px radius with a 1px border, and the selected one gets the navy ring.",
+    "avoid": [
+      "Stock lifestyle photos of couples or hands",
+      "Sparkle overlays, lens flares or glow on diamonds",
+      "Illustrations",
+      "Gradient backdrops behind photos",
+      "Drop shadows under rings",
+      "Cropping the ring's stone"
+    ]
+  },
+  "motionDirection": {
+    "summary": "Motion is feedback only, with one shared pair across the studio: 180ms with cubic-bezier(.2,.7,.2,1), the existing --ease. Nothing performs an entrance, and prefers-reduced-motion shows the final state immediately.",
+    "principles": [
+      "Selection feedback: when a style tile, variant, shape or diamond row is chosen, the navy selection ring and the champagne check fade in on the chosen item and out on the previous one, 150-180ms with a strong ease-out, no scale change",
+      "Stage swap: when a variant, metal or view changes, the stage photo cross-fades old to new in place, 180-220ms ease-out, holding position so the ring never jumps",
+      "Hallmark update: when an option changes, the matching cell of the hallmark strip changes its value and flashes a 2px champagne underline, 160ms ease-out then a 240ms fade",
+      "Step progress: on Continue to diamond or a step-tracker click, the 2px champagne underline slides from the old step label to the new one, 200-240ms ease-out, as the flow scrolls to the step",
+      "Filter results: when a diamond filter, the lab/natural toggle or the sort changes, the list rows cross-fade 120-160ms and keep their order identity, and the match count updates without counting up",
+      "Accordion: opening or collapsing a step section changes its height and rotates the chevron, 200-240ms ease-out, and can be interrupted",
+      "Overlay: the detail view, trending modal, compare and recently viewed fade the scrim and move the panel 8px into place, 180-220ms ease-out; Esc closes them on the reverse curve, and focus returns to the opener",
+      "Canvas collapse: the collapse button slides the canvas sheet closed and brings in the floating pill, 220-250ms ease-out, and the grid reflows from four to five columns without animating each tile"
+    ],
+    "avoid": [
+      "Entrance or scroll-reveal animations",
+      "Count-up prices",
+      "Shimmer or sparkle loops on diamonds",
+      "Auto-playing 360 videos",
+      "Bounce or spring easing",
+      "Parallax on the stage",
+      "Durations over 250ms"
+    ]
+  },
+  "voice": {
+    "summary": "A calm jeweller at the bench: plain, warm and specific, using words of the trade. Examples: 'Choose your setting', 'Prongs: Classic four-claw', 'Band width 2.0 mm', '18K white gold', 'Lab-grown · 1.20 ct · E · VS1 · Excellent', '42 diamonds match', 'No diamonds match these filters. Try a wider carat range', 'Saved to your designs (2 of 4)', 'Engraving: up to 20 characters', 'Ships in 3 weeks once ordered'. Sentence case throughout. Prices are written in full with currency, like $1,180.",
+    "avoid": [
+      "Generic nouns like 'Items', 'Records', 'Status' or 'Options'",
+      "Hype like 'stunning', 'breathtaking' or 'perfect forever'",
+      "Invented claims (conflict-free certified, bestseller counts, reviews)",
+      "Exclamation marks",
+      "Uppercase tracked labels",
+      "'Welcome back'",
+      "Emoji"
+    ]
+  }
+}

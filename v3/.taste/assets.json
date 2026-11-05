@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "id": "overnight-logo",
+      "kind": "image",
+      "status": "existing",
+      "purpose": "Protected navy OVERNIGHT wordmark at the left of the 48px top bar",
+      "requirements": [
+        "Display at 22px tall (about 92px wide); never recolour, redraw or crop",
+        "Keep alt=\"Overnight\"",
+        "Verified PNG, 490x117 px"
+      ],
+      "role": "logo",
+      "sectionIds": [
+        "shell-frame"
+      ],
+      "aspectRatio": "490:117",
+      "composition": "Horizontal wordmark on a transparent ground, left-aligned and vertically centred in the 48px bar on the ivory #F6F3EE frame. A 1px x 16px #CFC9C0 divider and the 'Ring studio' label follow it after 12px.",
+      "source": {
+        "kind": "project",
+        "reference": "assets/overnight-logo.png",
+        "contentType": "image/png"
+      },
+      "destination": "assets/overnight-logo.png"
+    },
+    {
+      "id": "setting-photos",
+      "kind": "image",
+      "status": "existing",
+      "purpose": "Real studio product photos of the 10 setting styles, used in style tiles, variant cards, trending chips, the canvas stage and thumbs, the review card, overlays (detail, trending, compare, recently viewed) and the summary pill",
+      "requirements": [
+        "Primary record file: assets/settings/solitaire.jpg (700x700 JPEG, verified)",
+        "The same project folder assets/settings also holds the other files used by index.html:906 styleImg(): hidden-halo-v2.jpg (1000x1000), halo-v2.jpg (600x600), pave.jpg, three-stone.jpg, side-stone.jpg, channel.jpg, twist.jpg, nature-inspired.jpg, vintage.jpg (700x700 each); halo.jpg and hidden-halo.jpg are unused",
+        "Keep every existing filename and path; Build must not move or rename them",
+        "Use object-fit: contain on the raised #F4F1EC well with mix-blend-mode: multiply; never crop the stone",
+        "Keep the existing rose-gold tint filter only for the rose metal state; no other filters, glows or shadows",
+        "Variants reuse their style's photo (mock data), so no new imagery is needed"
+      ],
+      "role": "product_image",
+      "sectionIds": [
+        "step-setting",
+        "setting-customise",
+        "step-review",
+        "canvas-stage",
+        "overlays",
+        "summary-pill"
+      ],
+      "aspectRatio": "1:1",
+      "composition": "A single ring centred on its own cream studio ground, seen at a three-quarter angle with the head and stone in the upper middle. Contain it at about 72% of the well (stage 528x440, tiles 112px or 168px well, variants 88px, thumbs 56px, pill 56px) with equal margins. Text sits outside the well, below it.",
+      "source": {
+        "kind": "project",
+        "reference": "assets/settings/solitaire.jpg",
+        "contentType": "image/jpeg"
+      },
+      "destination": "assets/settings/solitaire.jpg"
+    },
+    {
+      "id": "ring-360-videos",
+      "kind": "video",
+      "status": "existing",
+      "purpose": "Real 360° turntables shown in the canvas stage when the 360° toggle is pressed",
+      "requirements": [
+        "Primary record file: ring vids/Solitaire_360.mp4 (11 MB, 1000x1000, 15 s, verified)",
+        "The same project folder also holds HiddenHalo_360.mp4 (17 MB) and Halo_360.mp4 (11 MB), each 1000x1000 and 15 s long",
+        "Mapped in index.html:1040 VIDEOS for solitaire, hidden-halo and halo only",
+        "Set src and preload on first press only; no autoplay; muted, looped and playsinline",
+        "For the 7 styles without a turntable, disable the 360° toggle with the tooltip 'Turntable coming for this style' instead of falling back to the Solitaire video",
+        "With reduced motion on, show a play control instead of autoplaying after the toggle",
+        "If a video fails, revert to the photo and show the toast 'The 360 view could not load'"
+      ],
+      "role": "video",
+      "sectionIds": [
+        "canvas-stage"
+      ],
+      "aspectRatio": "1:1",
+      "composition": "A ring turning on a cream ground, centred and contained in the same 528x440 raised well as the photo at the same scale, so the cross-fade from photo to video does not jump. Corner buttons stay 16px inside the well.",
+      "source": {
+        "kind": "project",
+        "reference": "ring vids/Solitaire_360.mp4",
+        "contentType": "video/mp4"
+      },
+      "destination": "ring vids/Solitaire_360.mp4"
+    },
+    {
+      "id": "font-inter",
+      "kind": "font",
+      "status": "ready",
+      "purpose": "Brand interface face for controls, tables, labels, body text and tabular figures",
+      "requirements": [
+        "Variable TrueType file (opsz, wght axes); use weights 400, 500 and 600 only",
+        "@font-face: family 'Inter', src url('assets/fonts/Inter-Variable.ttf') format('truetype'), font-weight 100 900, font-display swap",
+        "Enable font-variant-numeric: tabular-nums for prices, carats and style numbers",
+        "Magic bytes 00010000 (TrueType) verified; 876,576 bytes; HTTP 200",
+        "License text saved at assets/fonts/Inter-OFL.txt (Copyright 2020 The Inter Project Authors)",
+        "Load the local file instead of, or before, the Google Fonts link at index.html:6"
+      ],
+      "role": "font",
+      "sectionIds": [
+        "shell-frame",
+        "intro-title",
+        "step-setting",
+        "setting-customise",
+        "step-diamond",
+        "step-review",
+        "canvas-stage",
+        "your-ring-panel",
+        "condensed-step-bar",
+        "overlays",
+        "summary-pill"
+      ],
+      "source": {
+        "kind": "external",
+        "reference": "https://github.com/google/fonts/tree/main/ofl/inter",
+        "license": "SIL Open Font License 1.1",
+        "contentType": "application/octet-stream"
+      },
+      "destination": "assets/fonts/Inter-Variable.ttf"
+    },
+    {
+      "id": "font-cormorant-garamond",
+      "kind": "font",
+      "status": "ready",
+      "purpose": "Brand display serif with one job: the intro headline, step titles, the ring's name and the setting and total prices",
+      "requirements": [
+        "Variable TrueType file (wght axis); use weights 500 and 600 only; no italic",
+        "@font-face: family 'Cormorant Garamond', src url('assets/fonts/CormorantGaramond-Variable.ttf') format('truetype'), font-weight 300 700, font-display swap",
+        "Sizes: 22/600 for the h1 and step titles, 16/600 in #cbar, 28/500 for prices; never in controls or tables",
+        "Magic bytes 00010000 (TrueType) verified; 1,195,560 bytes; HTTP 200",
+        "License text saved at assets/fonts/CormorantGaramond-OFL.txt (Copyright 2015 the Cormorant Project Authors)"
+      ],
+      "role": "font",
+      "sectionIds": [
+        "intro-title",
+        "step-setting",
+        "step-diamond",
+        "step-review",
+        "your-ring-panel",
+        "condensed-step-bar",
+        "overlays"
+      ],
+      "source": {
+        "kind": "external",
+        "reference": "https://github.com/google/fonts/tree/main/ofl/cormorantgaramond",
+        "license": "SIL Open Font License 1.1",
+        "contentType": "application/octet-stream"
+      },
+      "destination": "assets/fonts/CormorantGaramond-Variable.ttf"
+    }
+  ]
+}
